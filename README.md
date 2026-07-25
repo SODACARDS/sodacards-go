@@ -1,10 +1,10 @@
 # SODACARDS Go SDK
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Docs](https://img.shields.io/badge/docs-developers.sodacards.com-003087.svg)](https://developers.sodacards.com)
+[![Docs](https://img.shields.io/badge/docs-developer.sodacards.com-003087.svg)](https://developer.sodacards.com)
 [![Go Reference](https://pkg.go.dev/badge/github.com/SODACARDS/sodacards-go.svg)](https://pkg.go.dev/github.com/SODACARDS/sodacards-go)
 
-The official Go client for the [SODACARDS Developer API](https://developers.sodacards.com) — sell gift cards and game top-ups from your own systems, across West Africa.
+The official Go client for the [SODACARDS Developer API](https://developer.sodacards.com) — sell gift cards and game top-ups from your own systems, across West Africa.
 
 Browse the catalog, place orders, retrieve delivered codes, and subscribe to webhooks.
 
@@ -20,7 +20,7 @@ go get github.com/SODACARDS/sodacards-go
 
 ## Authentication
 
-Every request is authenticated with an API key that you generate from the [developer dashboard](https://developers.sodacards.com). Keys are prefixed `sc_live_` (production) or `sc_test_` (sandbox); the sandbox returns fake codes so you can integrate safely.
+Every request is authenticated with an API key that you generate from the [developer dashboard](https://developer.sodacards.com). Keys are prefixed `sc_live_` (production) or `sc_test_` (sandbox); the sandbox returns fake codes so you can integrate safely.
 
 The key is passed through the request context — load it from the environment, never hard-code it.
 
@@ -110,7 +110,7 @@ List endpoints use cursor (keyset) pagination. Pass the `nextCursor` returned by
 
 ## Documentation and support
 
-- API reference and guides: <https://developers.sodacards.com>
+- API reference and guides: <https://developer.sodacards.com>
 - Support: <mailto:support@sodacards.com>
 
 ## License
@@ -119,4 +119,4 @@ Released under the [MIT License](./LICENSE).
 
 ---
 
-This SDK is generated from the SODACARDS OpenAPI specification and is regenerated automatically whenever the API changes. Open issues on the [documentation portal](https://developers.sodacards.com) rather than editing generated files directly.
+This SDK is generated from the SODACARDS OpenAPI specification and is regenerated automatically whenever the API changes. Open issues on the [documentation portal](https://developer.sodacards.com) rather than editing generated files directly.
