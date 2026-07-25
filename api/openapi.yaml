@@ -1,0 +1,954 @@
+openapi: 3.1.0
+info:
+  description: Sell gift cards and game top-ups from your own systems.
+  title: SODACARDS Developer API
+  version: 1.0.0
+servers:
+- url: https://api.sodacards.com
+security:
+- ApiKeyAuth: []
+tags:
+- description: |-
+    PublicAPIService is the public developer API a reseller calls with an API key.
+     It is served as REST (via HTTP transcoding) so developers use GET /v1/... and
+     curl, and its OpenAPI 3.1 spec is generated from this one file. Every method is
+     authenticated by the API-key gateway that fronts it.
+  name: PublicAPIService
+paths:
+  /v1/catalog:
+    get:
+      description: |-
+        ListCatalog returns a page of the products the reseller may sell, each with
+         the reseller's price. It is cursor-paginated: pass next_cursor from the
+         previous page to fetch the next. A product's id is the identifier used to
+         order it.
+      operationId: listCatalog
+      parameters:
+      - description: |-
+          limit is the maximum number of products to return (1..100). Zero applies the
+           default page size.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          title: limit
+          type: integer
+        style: form
+      - description: cursor is the next_cursor of the previous page. Empty for the
+          first page.
+        explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          title: cursor
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.ListCatalogResponse"
+          description: Success
+      summary: ListCatalog
+  /v1/orders:
+    get:
+      description: |-
+        ListOrders returns a page of the reseller's orders, newest first. It is
+         cursor-paginated: pass next_cursor from the previous page to fetch the next.
+         A live key lists live orders and a test key lists its own sandbox orders.
+      operationId: listOrders
+      parameters:
+      - description: |-
+          limit is the maximum number of orders to return (1..100). Zero applies the
+           default page size.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          title: limit
+          type: integer
+        style: form
+      - description: cursor is the next_cursor of the previous page. Empty for the
+          first page.
+        explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          title: cursor
+          type: string
+        style: form
+      - description: |-
+          reference, when set, filters the list to the orders carrying that client
+           reference. The cursor is ignored when a reference is given.
+        explode: true
+        in: query
+        name: reference
+        required: false
+        schema:
+          title: reference
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.ListOrdersResponse"
+          description: Success
+      summary: ListOrders
+    post:
+      description: |-
+        PlaceOrder buys one or more products, settled from the reseller's prepaid
+         wallet. It is asynchronous: the order is accepted and fulfilled in the
+         background, so the response carries the order id and a status to poll. The
+         request MUST carry an Idempotency-Key header, so a retried request never
+         places a second order.
+      operationId: placeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/sodacards.devpublic.v1.PlaceOrderRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.PlaceOrderResponse"
+          description: Success
+      summary: PlaceOrder
+  /v1/orders/{id}:
+    get:
+      description: |-
+        GetOrder returns one of the reseller's orders by id, with its lines and
+         current status. A live key reads live orders and a test key reads its own
+         sandbox orders; an id that is not the caller's is reported as not found.
+      operationId: getOrder
+      parameters:
+      - description: "id is the order id, from PlaceOrder."
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          title: id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.GetOrderResponse"
+          description: Success
+      summary: GetOrder
+  /v1/orders/{order_id}/codes:
+    get:
+      description: |-
+        RevealOrderCodes returns the delivered codes of a completed order. Codes are
+         available once the order is completed; a still-processing order reports that
+         it is not ready. Reveals are rate-limited per order.
+      operationId: revealOrderCodes
+      parameters:
+      - description: order_id is the order whose codes to reveal.
+        explode: false
+        in: path
+        name: order_id
+        required: true
+        schema:
+          title: order_id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.RevealOrderCodesResponse"
+          description: Success
+      summary: RevealOrderCodes
+  /v1/ping:
+    get:
+      description: |-
+        Ping confirms a key works and reports which reseller and environment it
+         authenticated as. It is the health check a developer hits first.
+      operationId: ping
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.PingResponse"
+          description: Success
+      summary: Ping
+  /v1/products/{id}:
+    get:
+      description: |-
+        GetProduct returns a single product by its id, priced for the reseller. The
+         id is the one carried by a catalog entry. A product the reseller may not see
+         (unlisted, hidden or inactive) is reported as not found, so an id cannot be
+         probed to learn what exists outside the reseller's catalog.
+      operationId: getProduct
+      parameters:
+      - description: "id is the product id, taken from a catalog entry."
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          title: id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.GetProductResponse"
+          description: Success
+      summary: GetProduct
+  /v1/webhooks:
+    get:
+      description: |-
+        ListWebhooks returns the reseller's registered webhook endpoints. It never
+         returns their signing secrets.
+      operationId: listWebhooks
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.ListWebhooksResponse"
+          description: Success
+      summary: ListWebhooks
+    post:
+      description: |-
+        RegisterWebhook registers a URL to receive signed event deliveries. The URL
+         must be HTTPS and publicly routable. The response carries the signing secret
+         once; store it, as it is never shown again.
+      operationId: registerWebhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/sodacards.devpublic.v1.RegisterWebhookRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.RegisterWebhookResponse"
+          description: Success
+      summary: RegisterWebhook
+  /v1/webhooks/{id}:
+    delete:
+      description: DeleteWebhook removes a webhook endpoint.
+      operationId: deleteWebhook
+      parameters:
+      - description: id is the webhook endpoint to remove.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          title: id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.DeleteWebhookResponse"
+          description: Success
+      summary: DeleteWebhook
+components:
+  schemas:
+    sodacards.devpublic.v1.DeleteWebhookRequest:
+      additionalProperties: {}
+      properties:
+        id:
+          description: id is the webhook endpoint to remove.
+          title: id
+          type: string
+      title: DeleteWebhookRequest
+    sodacards.devpublic.v1.DeleteWebhookResponse:
+      additionalProperties: false
+      title: DeleteWebhookResponse
+      type: object
+    sodacards.devpublic.v1.GetOrderRequest:
+      additionalProperties: {}
+      properties:
+        id:
+          description: "id is the order id, from PlaceOrder."
+          title: id
+          type: string
+      title: GetOrderRequest
+    sodacards.devpublic.v1.GetOrderResponse:
+      additionalProperties: false
+      example:
+        order: ""
+      properties:
+        order:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Order"
+          description: order is the requested order.
+          title: order
+      title: GetOrderResponse
+    sodacards.devpublic.v1.GetProductRequest:
+      additionalProperties: {}
+      properties:
+        id:
+          description: "id is the product id, taken from a catalog entry."
+          title: id
+          type: string
+      title: GetProductRequest
+    sodacards.devpublic.v1.GetProductResponse:
+      additionalProperties: false
+      example:
+        product: ""
+      properties:
+        product:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Product"
+          description: "product is the requested product, priced for the reseller."
+          title: product
+      title: GetProductResponse
+    sodacards.devpublic.v1.ListCatalogRequest:
+      additionalProperties: {}
+      properties:
+        limit:
+          description: |-
+            limit is the maximum number of products to return (1..100). Zero applies the
+             default page size.
+          format: int32
+          title: limit
+          type: integer
+        cursor:
+          description: cursor is the next_cursor of the previous page. Empty for the
+            first page.
+          title: cursor
+          type: string
+      title: ListCatalogRequest
+    sodacards.devpublic.v1.ListCatalogResponse:
+      additionalProperties: false
+      example:
+        data:
+        - id: id
+          name: name
+          faceValue: ""
+          price: ""
+          strikePrice: ""
+          bonus: bonus
+          minQuantity: 0
+          maxQuantity: 6
+          purchasable: true
+        - id: id
+          name: name
+          faceValue: ""
+          price: ""
+          strikePrice: ""
+          bonus: bonus
+          minQuantity: 0
+          maxQuantity: 6
+          purchasable: true
+        hasMore: true
+        nextCursor: nextCursor
+      properties:
+        data:
+          description: "data is the page of products, priced for the calling reseller."
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.Product"
+          title: data
+          type: array
+          default: null
+        hasMore:
+          description: has_more is true when another page follows this one.
+          title: has_more
+          type: boolean
+        nextCursor:
+          description: next_cursor fetches the next page. Empty on the last page.
+          title: next_cursor
+          type: string
+      title: ListCatalogResponse
+    sodacards.devpublic.v1.ListOrdersRequest:
+      additionalProperties: {}
+      properties:
+        limit:
+          description: |-
+            limit is the maximum number of orders to return (1..100). Zero applies the
+             default page size.
+          format: int32
+          title: limit
+          type: integer
+        cursor:
+          description: cursor is the next_cursor of the previous page. Empty for the
+            first page.
+          title: cursor
+          type: string
+        reference:
+          description: |-
+            reference, when set, filters the list to the orders carrying that client
+             reference. The cursor is ignored when a reference is given.
+          title: reference
+          type: string
+      title: ListOrdersRequest
+    sodacards.devpublic.v1.ListOrdersResponse:
+      additionalProperties: false
+      example:
+        data:
+        - id: id
+          status: status
+          total: ""
+          createdAt: createdAt
+          reference: reference
+          lines:
+          - productId: productId
+            name: name
+            unitPrice: ""
+            quantity: 0
+            lineTotal: ""
+            inputFields:
+              key: inputFields
+          - productId: productId
+            name: name
+            unitPrice: ""
+            quantity: 0
+            lineTotal: ""
+            inputFields:
+              key: inputFields
+        - id: id
+          status: status
+          total: ""
+          createdAt: createdAt
+          reference: reference
+          lines:
+          - productId: productId
+            name: name
+            unitPrice: ""
+            quantity: 0
+            lineTotal: ""
+            inputFields:
+              key: inputFields
+          - productId: productId
+            name: name
+            unitPrice: ""
+            quantity: 0
+            lineTotal: ""
+            inputFields:
+              key: inputFields
+        hasMore: true
+        nextCursor: nextCursor
+      properties:
+        data:
+          description: "data is the page of orders, newest first."
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.Order"
+          title: data
+          type: array
+          default: null
+        hasMore:
+          description: has_more is true when another page follows this one.
+          title: has_more
+          type: boolean
+        nextCursor:
+          description: next_cursor fetches the next page. Empty on the last page.
+          title: next_cursor
+          type: string
+      title: ListOrdersResponse
+    sodacards.devpublic.v1.ListWebhooksRequest:
+      additionalProperties:
+        nullable: true
+      title: ListWebhooksRequest
+    sodacards.devpublic.v1.ListWebhooksResponse:
+      additionalProperties: false
+      example:
+        webhooks:
+        - id: id
+          url: url
+          events:
+          - events
+          - events
+          active: true
+          createdAt: createdAt
+        - id: id
+          url: url
+          events:
+          - events
+          - events
+          active: true
+          createdAt: createdAt
+      properties:
+        webhooks:
+          description: webhooks are the reseller's registered endpoints.
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.Webhook"
+          title: webhooks
+          type: array
+          default: null
+      title: ListWebhooksResponse
+    sodacards.devpublic.v1.Money:
+      additionalProperties: false
+      description: |-
+        Money is an amount in the currency's minor units together with its ISO-4217
+         code. XOF (the West-African CFA franc) has no minor unit, so for XOF amount is
+         the whole franc value.
+      properties:
+        amount:
+          $ref: "#/components/schemas/amount"
+        currency:
+          description: "currency is the ISO-4217 code, e.g. \"XOF\"."
+          title: currency
+          type: string
+      title: Money
+    sodacards.devpublic.v1.Order:
+      additionalProperties: false
+      description: |-
+        Order is a placed order with its lines and current status. It never carries the
+         supplier cost.
+      example:
+        id: id
+        status: status
+        total: ""
+        createdAt: createdAt
+        reference: reference
+        lines:
+        - productId: productId
+          name: name
+          unitPrice: ""
+          quantity: 0
+          lineTotal: ""
+          inputFields:
+            key: inputFields
+        - productId: productId
+          name: name
+          unitPrice: ""
+          quantity: 0
+          lineTotal: ""
+          inputFields:
+            key: inputFields
+      properties:
+        id:
+          description: id identifies the order.
+          title: id
+          type: string
+        status:
+          description: |-
+            status is the order's current state: "pending", "processing", "completed",
+             "failed" or "refunded".
+          title: status
+          type: string
+        total:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
+          description: "total is the amount charged for the order, in FCFA."
+          title: total
+        createdAt:
+          description: created_at is when the order was placed (RFC 3339).
+          title: created_at
+          type: string
+        reference:
+          description: "reference is the identifier you attached at creation, empty\
+            \ if none."
+          title: reference
+          type: string
+        lines:
+          description: lines are the ordered products.
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.OrderItem"
+          title: lines
+          type: array
+          default: null
+      title: Order
+    sodacards.devpublic.v1.OrderItem:
+      additionalProperties: false
+      description: OrderItem is one line of an order.
+      example:
+        productId: productId
+        name: name
+        unitPrice: ""
+        quantity: 0
+        lineTotal: ""
+        inputFields:
+          key: inputFields
+      properties:
+        productId:
+          description: product_id is the product ordered on this line.
+          title: product_id
+          type: string
+        name:
+          description: name is the product name at order time.
+          title: name
+          type: string
+        unitPrice:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
+          description: "unit_price is the price of one unit, in FCFA."
+          title: unit_price
+        quantity:
+          description: quantity is how many units were ordered.
+          format: int32
+          title: quantity
+          type: integer
+        lineTotal:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
+          description: "line_total is unit_price times quantity, in FCFA."
+          title: line_total
+        inputFields:
+          additionalProperties:
+            title: value
+            type: string
+          description: input_fields are the purchase-form values submitted for this
+            line.
+          title: input_fields
+      title: OrderItem
+    sodacards.devpublic.v1.OrderItem.InputFieldsEntry:
+      additionalProperties: {}
+      properties:
+        key:
+          title: key
+          type: string
+        value:
+          title: value
+          type: string
+      title: InputFieldsEntry
+    sodacards.devpublic.v1.OrderLine:
+      additionalProperties: false
+      description: |-
+        OrderLine is one product to buy on an order. input_fields carries the
+         purchase-form values a product requires (for example a game player id), keyed
+         by the field name from the product definition.
+      properties:
+        productId:
+          description: product_id is the id of the product to buy (a catalog product
+            id).
+          title: product_id
+          type: string
+        quantity:
+          description: quantity is how many units to buy on this line (at least one).
+          format: int32
+          title: quantity
+          type: integer
+        inputFields:
+          additionalProperties:
+            title: value
+            type: string
+          description: "input_fields holds the required purchase-form values, keyed\
+            \ by field name."
+          title: input_fields
+      title: OrderLine
+    sodacards.devpublic.v1.OrderLine.InputFieldsEntry:
+      additionalProperties: false
+      properties:
+        key:
+          title: key
+          type: string
+        value:
+          title: value
+          type: string
+      title: InputFieldsEntry
+    sodacards.devpublic.v1.PingRequest:
+      additionalProperties:
+        nullable: true
+      title: PingRequest
+    sodacards.devpublic.v1.PingResponse:
+      additionalProperties: false
+      example:
+        status: status
+        environment: environment
+        resellerId: resellerId
+      properties:
+        status:
+          description: status is "ok" when the key authenticated.
+          title: status
+          type: string
+        environment:
+          description: |-
+            environment is "live" or "test", so a developer sees which mode their key is
+             in.
+          title: environment
+          type: string
+        resellerId:
+          description: reseller_id is the account the key belongs to.
+          title: reseller_id
+          type: string
+      title: PingResponse
+    sodacards.devpublic.v1.PlaceOrderRequest:
+      additionalProperties: false
+      properties:
+        lines:
+          description: lines are the products to buy and how many of each. At least
+            one is required.
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.OrderLine"
+          title: lines
+          type: array
+          default: null
+        reference:
+          description: |-
+            reference is an optional identifier you attach to the order to correlate it
+             with your own system and look it up later. Reusing an Idempotency-Key with a
+             different reference is a conflict.
+          title: reference
+          type: string
+      title: PlaceOrderRequest
+    sodacards.devpublic.v1.PlaceOrderResponse:
+      additionalProperties: false
+      example:
+        order: ""
+      properties:
+        order:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.PlacedOrder"
+          description: |-
+            order is the accepted order. Its status is pending until fulfillment
+             completes; poll the order to follow it.
+          title: order
+      title: PlaceOrderResponse
+    sodacards.devpublic.v1.PlacedOrder:
+      additionalProperties: false
+      description: |-
+        PlacedOrder is the accepted order: its id, the amount charged to the wallet in
+         FCFA, and its current status.
+      properties:
+        id:
+          description: id identifies the order; use it to poll the order and reveal
+            its codes.
+          title: id
+          type: string
+        status:
+          description: |-
+            status is the order's current state, e.g. "pending", "processing",
+             "completed", "partially_completed", "failed" or "refunded".
+          title: status
+          type: string
+        total:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
+          description: "total is the amount charged to the reseller's wallet, in FCFA."
+          title: total
+      title: PlacedOrder
+    sodacards.devpublic.v1.Product:
+      additionalProperties: false
+      description: |-
+        Product is one sellable item in the reseller catalog. Its id is what an order
+         line references. It never carries the supplier cost or routing.
+      example:
+        id: id
+        name: name
+        faceValue: ""
+        price: ""
+        strikePrice: ""
+        bonus: bonus
+        minQuantity: 0
+        maxQuantity: 6
+        purchasable: true
+      properties:
+        id:
+          description: id identifies the product; use it to place an order for this
+            item.
+          title: id
+          type: string
+        name:
+          description: name is the human-readable product name.
+          title: name
+          type: string
+        faceValue:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.ProductFaceValue"
+          description: |-
+            face_value is the nominal value printed on the item (e.g. a 10 USD card),
+             which may differ from the currency the reseller pays in.
+          title: face_value
+        price:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
+          description: |-
+            price is what the reseller pays, in FCFA. It is absent when the item is not
+             yet priced (listed but not purchasable).
+          title: price
+        strikePrice:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
+          description: |-
+            strike_price is an optional reference (pre-discount) price, in FCFA, for
+             display. Absent when there is none.
+          title: strike_price
+        bonus:
+          description: |-
+            bonus describes any extra value granted with the item, e.g. "+10%". Empty
+             when there is none.
+          title: bonus
+          type: string
+        minQuantity:
+          description: min_quantity and max_quantity bound how many units an order
+            line may buy.
+          format: int32
+          title: min_quantity
+          type: integer
+        maxQuantity:
+          format: int32
+          title: max_quantity
+          type: integer
+        purchasable:
+          description: purchasable is true when the item has a price and can be ordered
+            now.
+          title: purchasable
+          type: boolean
+      title: Product
+    sodacards.devpublic.v1.ProductFaceValue:
+      additionalProperties: false
+      description: |-
+        ProductFaceValue is the nominal value printed on a product. amount is a decimal
+         string (e.g. "10.00") so fractional face values are exact.
+      properties:
+        amount:
+          description: "amount is the face value as an exact decimal string, e.g.\
+            \ \"10.00\"."
+          title: amount
+          type: string
+        currency:
+          description: "currency is the ISO-4217 code of the face value, e.g. \"USD\"\
+            ."
+          title: currency
+          type: string
+      title: ProductFaceValue
+    sodacards.devpublic.v1.RegisterWebhookRequest:
+      additionalProperties: false
+      properties:
+        url:
+          description: url is the HTTPS endpoint to deliver events to.
+          title: url
+          type: string
+        events:
+          description: |-
+            events are the event types to subscribe to (at least one), e.g.
+             "order.fulfilled", "order.needs_attention", "order.refunded", "wallet.low_balance",
+             "wallet.credited".
+          items:
+            type: string
+          title: events
+          type: array
+          default: null
+      title: RegisterWebhookRequest
+    sodacards.devpublic.v1.RegisterWebhookResponse:
+      additionalProperties: false
+      example:
+        webhook: ""
+        secret: secret
+      properties:
+        webhook:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Webhook"
+          description: webhook is the registered endpoint.
+          title: webhook
+        secret:
+          description: |-
+            secret is the signing secret, shown only once. Store it; verify each delivery
+             with it. It is never returned again.
+          title: secret
+          type: string
+      title: RegisterWebhookResponse
+    sodacards.devpublic.v1.RevealOrderCodesRequest:
+      additionalProperties: {}
+      properties:
+        orderId:
+          description: order_id is the order whose codes to reveal.
+          title: order_id
+          type: string
+      title: RevealOrderCodesRequest
+    sodacards.devpublic.v1.RevealOrderCodesResponse:
+      additionalProperties: false
+      example:
+        codes:
+        - label: label
+          code: code
+        - label: label
+          code: code
+      properties:
+        codes:
+          description: codes are the delivered codes of the order.
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.RevealedCode"
+          title: codes
+          type: array
+          default: null
+      title: RevealOrderCodesResponse
+    sodacards.devpublic.v1.RevealedCode:
+      additionalProperties: false
+      description: RevealedCode is one delivered code of an order.
+      example:
+        label: label
+        code: code
+      properties:
+        label:
+          description: label names what the code is for (e.g. the product line).
+          title: label
+          type: string
+        code:
+          description: "code is the delivered value. Treat it as a secret: do not\
+            \ log it."
+          title: code
+          type: string
+      title: RevealedCode
+    sodacards.devpublic.v1.Webhook:
+      additionalProperties: false
+      description: Webhook is a registered endpoint. It never carries the signing
+        secret.
+      example:
+        id: id
+        url: url
+        events:
+        - events
+        - events
+        active: true
+        createdAt: createdAt
+      properties:
+        id:
+          description: id identifies the endpoint.
+          title: id
+          type: string
+        url:
+          description: url is the HTTPS endpoint events are delivered to.
+          title: url
+          type: string
+        events:
+          description: events are the subscribed event types.
+          items:
+            type: string
+          title: events
+          type: array
+          default: null
+        active:
+          description: active is whether deliveries are currently sent to this endpoint.
+          title: active
+          type: boolean
+        createdAt:
+          description: created_at is when the endpoint was registered (RFC 3339).
+          title: created_at
+          type: string
+      title: Webhook
+    amount:
+      anyOf:
+      - format: int32
+        type: integer
+      - type: string
+      description: amount is the value in the currency's minor units.
+      format: int64
+      title: amount
+  securitySchemes:
+    ApiKeyAuth:
+      description: "Your API key, prefixed sc_live_ or sc_test_."
+      in: header
+      name: X-API-Key
+      type: apiKey
