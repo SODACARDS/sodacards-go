@@ -499,9 +499,10 @@ components:
     sodacards.devpublic.v1.Money:
       additionalProperties: false
       description: |-
-        Money is an amount in the currency's minor units together with its ISO-4217
-         code. XOF (the West-African CFA franc) has no minor unit, so for XOF amount is
-         the whole franc value.
+        Money is an amount in a currency's minor units, together with the currency's
+         ISO-4217 code and its number of decimal places, so the amount can be
+         interpreted without assuming the currency. XOF (the West-African CFA franc) has
+         no minor unit, so an XOF amount is a whole franc value.
       properties:
         amount:
           $ref: "#/components/schemas/amount"
@@ -509,6 +510,13 @@ components:
           description: "currency is the ISO-4217 code, e.g. \"XOF\"."
           title: currency
           type: string
+        minorUnitExponent:
+          description: |-
+            minor_unit_exponent is the currency's number of decimal places (0 for XOF,
+             2 for USD): amount divided by 10^minor_unit_exponent is the major-unit value.
+          format: int32
+          title: minor_unit_exponent
+          type: integer
       title: Money
     sodacards.devpublic.v1.Order:
       additionalProperties: false
@@ -550,7 +558,8 @@ components:
         total:
           allOf:
           - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
-          description: "total is the amount charged for the order, in FCFA."
+          description: "total is the amount charged for the order, in the currency\
+            \ of Money."
           title: total
         createdAt:
           description: created_at is when the order was placed (RFC 3339).
@@ -592,7 +601,7 @@ components:
         unitPrice:
           allOf:
           - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
-          description: "unit_price is the price of one unit, in FCFA."
+          description: "unit_price is the price of one unit, in the currency of Money."
           title: unit_price
         quantity:
           description: quantity is how many units were ordered.
@@ -602,7 +611,8 @@ components:
         lineTotal:
           allOf:
           - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
-          description: "line_total is unit_price times quantity, in FCFA."
+          description: "line_total is unit_price times quantity, in the currency of\
+            \ Money."
           title: line_total
         inputFields:
           additionalProperties:
@@ -718,8 +728,8 @@ components:
     sodacards.devpublic.v1.PlacedOrder:
       additionalProperties: false
       description: |-
-        PlacedOrder is the accepted order: its id, the amount charged to the wallet in
-         FCFA, and its current status.
+        PlacedOrder is the accepted order: its id, the amount charged to the wallet
+         (see total), and its current status.
       properties:
         id:
           description: id identifies the order; use it to poll the order and reveal
@@ -735,7 +745,8 @@ components:
         total:
           allOf:
           - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
-          description: "total is the amount charged to the reseller's wallet, in FCFA."
+          description: "total is the amount charged to the reseller's wallet, in the\
+            \ currency of Money."
           title: total
       title: PlacedOrder
     sodacards.devpublic.v1.Product:
@@ -774,14 +785,14 @@ components:
           allOf:
           - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
           description: |-
-            price is what the reseller pays, in FCFA. It is absent when the item is not
+            price is what the reseller pays, in the currency of Money. It is absent when the item is not
              yet priced (listed but not purchasable).
           title: price
         strikePrice:
           allOf:
           - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
           description: |-
-            strike_price is an optional reference (pre-discount) price, in FCFA, for
+            strike_price is an optional reference (pre-discount) price, in the currency of Money, for
              display. Absent when there is none.
           title: strike_price
         bonus:

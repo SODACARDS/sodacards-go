@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | Pointer to **string** | id identifies the order; use it to poll the order and reveal its codes. | [optional] 
 **Status** | Pointer to **string** | status is the order&#39;s current state, e.g. \&quot;pending\&quot;, \&quot;processing\&quot;,  \&quot;completed\&quot;, \&quot;partially_completed\&quot;, \&quot;failed\&quot; or \&quot;refunded\&quot;. | [optional] 
-**Total** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | total is the amount charged to the reseller&#39;s wallet, in FCFA. | [optional] 
+**Total** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | total is the amount charged to the reseller&#39;s wallet, in the currency of Money. | [optional] 
 
 ## Methods
 

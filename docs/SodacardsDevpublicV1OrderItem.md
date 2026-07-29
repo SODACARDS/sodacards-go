@@ -6,9 +6,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ProductId** | Pointer to **string** | product_id is the product ordered on this line. | [optional] 
 **Name** | Pointer to **string** | name is the product name at order time. | [optional] 
-**UnitPrice** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | unit_price is the price of one unit, in FCFA. | [optional] 
+**UnitPrice** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | unit_price is the price of one unit, in the currency of Money. | [optional] 
 **Quantity** | Pointer to **int32** | quantity is how many units were ordered. | [optional] 
-**LineTotal** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | line_total is unit_price times quantity, in FCFA. | [optional] 
+**LineTotal** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | line_total is unit_price times quantity, in the currency of Money. | [optional] 
 **InputFields** | Pointer to **map[string]string** | input_fields are the purchase-form values submitted for this line. | [optional] 
 
 ## Methods

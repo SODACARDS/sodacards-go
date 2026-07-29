@@ -23,11 +23,11 @@ type SodacardsDevpublicV1OrderItem struct {
 	ProductId *string `json:"productId,omitempty"`
 	// name is the product name at order time.
 	Name *string `json:"name,omitempty"`
-	// unit_price is the price of one unit, in FCFA.
+	// unit_price is the price of one unit, in the currency of Money.
 	UnitPrice *SodacardsDevpublicV1Money `json:"unitPrice,omitempty"`
 	// quantity is how many units were ordered.
 	Quantity *int32 `json:"quantity,omitempty"`
-	// line_total is unit_price times quantity, in FCFA.
+	// line_total is unit_price times quantity, in the currency of Money.
 	LineTotal *SodacardsDevpublicV1Money `json:"lineTotal,omitempty"`
 	// input_fields are the purchase-form values submitted for this line.
 	InputFields map[string]string `json:"inputFields,omitempty"`

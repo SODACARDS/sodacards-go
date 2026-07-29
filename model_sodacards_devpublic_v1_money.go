@@ -17,11 +17,13 @@ import (
 // checks if the SodacardsDevpublicV1Money type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &SodacardsDevpublicV1Money{}
 
-// SodacardsDevpublicV1Money Money is an amount in the currency's minor units together with its ISO-4217  code. XOF (the West-African CFA franc) has no minor unit, so for XOF amount is  the whole franc value.
+// SodacardsDevpublicV1Money Money is an amount in a currency's minor units, together with the currency's  ISO-4217 code and its number of decimal places, so the amount can be  interpreted without assuming the currency. XOF (the West-African CFA franc) has  no minor unit, so an XOF amount is a whole franc value.
 type SodacardsDevpublicV1Money struct {
 	Amount *Amount `json:"amount,omitempty"`
 	// currency is the ISO-4217 code, e.g. \"XOF\".
 	Currency *string `json:"currency,omitempty"`
+	// minor_unit_exponent is the currency's number of decimal places (0 for XOF,  2 for USD): amount divided by 10^minor_unit_exponent is the major-unit value.
+	MinorUnitExponent *int32 `json:"minorUnitExponent,omitempty"`
 }
 
 // NewSodacardsDevpublicV1Money instantiates a new SodacardsDevpublicV1Money object
@@ -105,6 +107,38 @@ func (o *SodacardsDevpublicV1Money) SetCurrency(v string) {
 	o.Currency = &v
 }
 
+// GetMinorUnitExponent returns the MinorUnitExponent field value if set, zero value otherwise.
+func (o *SodacardsDevpublicV1Money) GetMinorUnitExponent() int32 {
+	if o == nil || IsNil(o.MinorUnitExponent) {
+		var ret int32
+		return ret
+	}
+	return *o.MinorUnitExponent
+}
+
+// GetMinorUnitExponentOk returns a tuple with the MinorUnitExponent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SodacardsDevpublicV1Money) GetMinorUnitExponentOk() (*int32, bool) {
+	if o == nil || IsNil(o.MinorUnitExponent) {
+		return nil, false
+	}
+	return o.MinorUnitExponent, true
+}
+
+// HasMinorUnitExponent returns a boolean if a field has been set.
+func (o *SodacardsDevpublicV1Money) HasMinorUnitExponent() bool {
+	if o != nil && !IsNil(o.MinorUnitExponent) {
+		return true
+	}
+
+	return false
+}
+
+// SetMinorUnitExponent gets a reference to the given int32 and assigns it to the MinorUnitExponent field.
+func (o *SodacardsDevpublicV1Money) SetMinorUnitExponent(v int32) {
+	o.MinorUnitExponent = &v
+}
+
 func (o SodacardsDevpublicV1Money) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -120,6 +154,9 @@ func (o SodacardsDevpublicV1Money) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Currency) {
 		toSerialize["currency"] = o.Currency
+	}
+	if !IsNil(o.MinorUnitExponent) {
+		toSerialize["minorUnitExponent"] = o.MinorUnitExponent
 	}
 	return toSerialize, nil
 }

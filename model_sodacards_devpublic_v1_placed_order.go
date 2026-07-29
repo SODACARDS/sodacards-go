@@ -17,13 +17,13 @@ import (
 // checks if the SodacardsDevpublicV1PlacedOrder type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &SodacardsDevpublicV1PlacedOrder{}
 
-// SodacardsDevpublicV1PlacedOrder PlacedOrder is the accepted order: its id, the amount charged to the wallet in  FCFA, and its current status.
+// SodacardsDevpublicV1PlacedOrder PlacedOrder is the accepted order: its id, the amount charged to the wallet  (see total), and its current status.
 type SodacardsDevpublicV1PlacedOrder struct {
 	// id identifies the order; use it to poll the order and reveal its codes.
 	Id *string `json:"id,omitempty"`
 	// status is the order's current state, e.g. \"pending\", \"processing\",  \"completed\", \"partially_completed\", \"failed\" or \"refunded\".
 	Status *string `json:"status,omitempty"`
-	// total is the amount charged to the reseller's wallet, in FCFA.
+	// total is the amount charged to the reseller's wallet, in the currency of Money.
 	Total *SodacardsDevpublicV1Money `json:"total,omitempty"`
 }
 

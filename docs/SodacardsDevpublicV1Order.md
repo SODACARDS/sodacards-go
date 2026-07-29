@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | Pointer to **string** | id identifies the order. | [optional] 
 **Status** | Pointer to **string** | status is the order&#39;s current state: \&quot;pending\&quot;, \&quot;processing\&quot;, \&quot;completed\&quot;,  \&quot;failed\&quot; or \&quot;refunded\&quot;. | [optional] 
-**Total** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | total is the amount charged for the order, in FCFA. | [optional] 
+**Total** | Pointer to [**SodacardsDevpublicV1Money**](SodacardsDevpublicV1Money.md) | total is the amount charged for the order, in the currency of Money. | [optional] 
 **CreatedAt** | Pointer to **string** | created_at is when the order was placed (RFC 3339). | [optional] 
 **Reference** | Pointer to **string** | reference is the identifier you attached at creation, empty if none. | [optional] 
 **Lines** | Pointer to [**[]SodacardsDevpublicV1OrderItem**](SodacardsDevpublicV1OrderItem.md) | lines are the ordered products. | [optional] 

@@ -23,7 +23,7 @@ type SodacardsDevpublicV1Order struct {
 	Id *string `json:"id,omitempty"`
 	// status is the order's current state: \"pending\", \"processing\", \"completed\",  \"failed\" or \"refunded\".
 	Status *string `json:"status,omitempty"`
-	// total is the amount charged for the order, in FCFA.
+	// total is the amount charged for the order, in the currency of Money.
 	Total *SodacardsDevpublicV1Money `json:"total,omitempty"`
 	// created_at is when the order was placed (RFC 3339).
 	CreatedAt *string `json:"createdAt,omitempty"`

@@ -25,9 +25,9 @@ type SodacardsDevpublicV1Product struct {
 	Name *string `json:"name,omitempty"`
 	// face_value is the nominal value printed on the item (e.g. a 10 USD card),  which may differ from the currency the reseller pays in.
 	FaceValue *SodacardsDevpublicV1ProductFaceValue `json:"faceValue,omitempty"`
-	// price is what the reseller pays, in FCFA. It is absent when the item is not  yet priced (listed but not purchasable).
+	// price is what the reseller pays, in the currency of Money. It is absent when the item is not  yet priced (listed but not purchasable).
 	Price *SodacardsDevpublicV1Money `json:"price,omitempty"`
-	// strike_price is an optional reference (pre-discount) price, in FCFA, for  display. Absent when there is none.
+	// strike_price is an optional reference (pre-discount) price, in the currency of Money, for  display. Absent when there is none.
 	StrikePrice *SodacardsDevpublicV1Money `json:"strikePrice,omitempty"`
 	// bonus describes any extra value granted with the item, e.g. \"+10%\". Empty  when there is none.
 	Bonus *string `json:"bonus,omitempty"`
