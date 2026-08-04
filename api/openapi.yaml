@@ -289,6 +289,36 @@ paths:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.DeleteWebhookResponse"
           description: Success
       summary: DeleteWebhook
+  /v1/webhooks/{id}/rotate:
+    post:
+      description: |-
+        RotateWebhookSecret issues a new signing secret for an endpoint without
+         interrupting deliveries: the new secret is returned once, and the previous one
+         stays valid until prev_secret_expires_at. During that window deliveries are
+         signed with both, so switch your verification to the new secret before the
+         deadline. Rotating again replaces the outgoing secret rather than adding a
+         third, so at most two secrets are ever accepted at once.
+      operationId: PublicAPIService_RotateWebhookSecret
+      parameters:
+      - description: id is the webhook endpoint whose signing secret to rotate.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          title: id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.RotateWebhookSecretResponse"
+          description: Success
+      summary: RotateWebhookSecret
+      tags:
+      - PublicAPIService
 components:
   schemas:
     sodacards.devpublic.v1.DeleteWebhookRequest:
@@ -947,6 +977,32 @@ components:
           title: code
           type: string
       title: RevealedCode
+    sodacards.devpublic.v1.RotateWebhookSecretRequest:
+      additionalProperties: {}
+      properties:
+        id:
+          description: id is the webhook endpoint whose signing secret to rotate.
+          title: id
+          type: string
+      title: RotateWebhookSecretRequest
+    sodacards.devpublic.v1.RotateWebhookSecretResponse:
+      additionalProperties: false
+      example:
+        secret: secret
+        prevSecretExpiresAt: prevSecretExpiresAt
+      properties:
+        secret:
+          description: "secret is the new signing secret, shown only once, like at\
+            \ registration."
+          title: secret
+          type: string
+        prevSecretExpiresAt:
+          description: |-
+            prev_secret_expires_at is when the previous secret stops being accepted
+             (RFC 3339). Until then both secrets validate a delivery.
+          title: prev_secret_expires_at
+          type: string
+      title: RotateWebhookSecretResponse
     sodacards.devpublic.v1.Webhook:
       additionalProperties: false
       description: Webhook is a registered endpoint. It never carries the signing

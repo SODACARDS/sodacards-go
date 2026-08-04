@@ -16,6 +16,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 
@@ -65,6 +66,128 @@ func (a *PublicAPIServiceAPIService) PublicAPIServiceGetBalanceExecute(r ApiPubl
 	}
 
 	localVarPath := localBasePath + "/v1/balance"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-API-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiPublicAPIServiceRotateWebhookSecretRequest struct {
+	ctx context.Context
+	ApiService *PublicAPIServiceAPIService
+	id string
+}
+
+func (r ApiPublicAPIServiceRotateWebhookSecretRequest) Execute() (*SodacardsDevpublicV1RotateWebhookSecretResponse, *http.Response, error) {
+	return r.ApiService.PublicAPIServiceRotateWebhookSecretExecute(r)
+}
+
+/*
+PublicAPIServiceRotateWebhookSecret RotateWebhookSecret
+
+RotateWebhookSecret issues a new signing secret for an endpoint without
+ interrupting deliveries: the new secret is returned once, and the previous one
+ stays valid until prev_secret_expires_at. During that window deliveries are
+ signed with both, so switch your verification to the new secret before the
+ deadline. Rotating again replaces the outgoing secret rather than adding a
+ third, so at most two secrets are ever accepted at once.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param id id is the webhook endpoint whose signing secret to rotate.
+ @return ApiPublicAPIServiceRotateWebhookSecretRequest
+*/
+func (a *PublicAPIServiceAPIService) PublicAPIServiceRotateWebhookSecret(ctx context.Context, id string) ApiPublicAPIServiceRotateWebhookSecretRequest {
+	return ApiPublicAPIServiceRotateWebhookSecretRequest{
+		ApiService: a,
+		ctx: ctx,
+		id: id,
+	}
+}
+
+// Execute executes the request
+//  @return SodacardsDevpublicV1RotateWebhookSecretResponse
+func (a *PublicAPIServiceAPIService) PublicAPIServiceRotateWebhookSecretExecute(r ApiPublicAPIServiceRotateWebhookSecretRequest) (*SodacardsDevpublicV1RotateWebhookSecretResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SodacardsDevpublicV1RotateWebhookSecretResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PublicAPIServiceAPIService.PublicAPIServiceRotateWebhookSecret")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/v1/webhooks/{id}/rotate"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
