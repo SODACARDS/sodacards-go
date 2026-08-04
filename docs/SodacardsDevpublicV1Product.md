@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **MinQuantity** | Pointer to **int32** | min_quantity and max_quantity bound how many units an order line may buy. | [optional] 
 **MaxQuantity** | Pointer to **int32** |  | [optional] 
 **Purchasable** | Pointer to **bool** | purchasable is true when the item has a price and can be ordered now. | [optional] 
+**InputFields** | Pointer to [**[]SodacardsDevpublicV1InputFieldSpec**](SodacardsDevpublicV1InputFieldSpec.md) | input_fields are the purchase-form fields this product requires. Empty for a  gift card that needs nothing; present for a game top-up. Read them to learn  which values to submit on the order line (OrderLine.input_fields, keyed by  each field&#39;s key) and to validate them before placing the order. | [optional] 
 
 ## Methods
 
@@ -257,6 +258,31 @@ SetPurchasable sets Purchasable field to given value.
 `func (o *SodacardsDevpublicV1Product) HasPurchasable() bool`
 
 HasPurchasable returns a boolean if a field has been set.
+
+### GetInputFields
+
+`func (o *SodacardsDevpublicV1Product) GetInputFields() []SodacardsDevpublicV1InputFieldSpec`
+
+GetInputFields returns the InputFields field if non-nil, zero value otherwise.
+
+### GetInputFieldsOk
+
+`func (o *SodacardsDevpublicV1Product) GetInputFieldsOk() (*[]SodacardsDevpublicV1InputFieldSpec, bool)`
+
+GetInputFieldsOk returns a tuple with the InputFields field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInputFields
+
+`func (o *SodacardsDevpublicV1Product) SetInputFields(v []SodacardsDevpublicV1InputFieldSpec)`
+
+SetInputFields sets InputFields field to given value.
+
+### HasInputFields
+
+`func (o *SodacardsDevpublicV1Product) HasInputFields() bool`
+
+HasInputFields returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

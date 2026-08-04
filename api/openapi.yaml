@@ -393,6 +393,82 @@ components:
           description: "product is the requested product, priced for the reseller."
           title: product
       title: GetProductResponse
+    sodacards.devpublic.v1.InputFieldOption:
+      additionalProperties: false
+      description: InputFieldOption is one allowed value of a "select" input field.
+      example:
+        value: value
+        label: label
+        parentValue: parentValue
+      properties:
+        value:
+          description: value is what to submit on OrderLine.input_fields for this
+            option.
+          title: value
+          type: string
+        label:
+          description: label is the human-readable display for the option.
+          title: label
+          type: string
+        parentValue:
+          description: |-
+            parent_value gates a cascading option: the value of the parent field's option
+             that must be selected for this option to apply (e.g. a server option gated by
+             the chosen region). Empty when the option is not part of a cascade.
+          title: parent_value
+          type: string
+      title: InputFieldOption
+    sodacards.devpublic.v1.InputFieldSpec:
+      additionalProperties: false
+      description: |-
+        InputFieldSpec describes one purchase-form field a product requires, so a
+         developer can build and validate an order line before placing it. Its value is
+         submitted on OrderLine.input_fields, keyed by this field's key.
+      example:
+        key: key
+        type: type
+        required: true
+        regex: regex
+        options:
+        - value: value
+          label: label
+          parentValue: parentValue
+        - value: value
+          label: label
+          parentValue: parentValue
+      properties:
+        key:
+          description: |-
+            key is the field's machine name and the key to use in
+             OrderLine.input_fields, e.g. "player_id".
+          title: key
+          type: string
+        type:
+          description: "type is how to render and validate the value: \"text\", \"\
+            number\" or \"select\"."
+          title: type
+          type: string
+        required:
+          description: required is true when an order line for this product must carry
+            this field.
+          title: required
+          type: boolean
+        regex:
+          description: |-
+            regex, when present, is a regular expression the submitted value must match
+             (text and number fields). Empty when there is no pattern constraint.
+          title: regex
+          type: string
+        options:
+          description: |-
+            options are the allowed values of a "select" field, in display order. Empty
+             for text and number fields.
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.InputFieldOption"
+          title: options
+          type: array
+          default: null
+      title: InputFieldSpec
     sodacards.devpublic.v1.ListCatalogRequest:
       additionalProperties: {}
       properties:
@@ -422,6 +498,29 @@ components:
           minQuantity: 0
           maxQuantity: 6
           purchasable: true
+          inputFields:
+          - key: key
+            type: type
+            required: true
+            regex: regex
+            options:
+            - value: value
+              label: label
+              parentValue: parentValue
+            - value: value
+              label: label
+              parentValue: parentValue
+          - key: key
+            type: type
+            required: true
+            regex: regex
+            options:
+            - value: value
+              label: label
+              parentValue: parentValue
+            - value: value
+              label: label
+              parentValue: parentValue
         - id: id
           name: name
           faceValue: ""
@@ -431,6 +530,29 @@ components:
           minQuantity: 0
           maxQuantity: 6
           purchasable: true
+          inputFields:
+          - key: key
+            type: type
+            required: true
+            regex: regex
+            options:
+            - value: value
+              label: label
+              parentValue: parentValue
+            - value: value
+              label: label
+              parentValue: parentValue
+          - key: key
+            type: type
+            required: true
+            regex: regex
+            options:
+            - value: value
+              label: label
+              parentValue: parentValue
+            - value: value
+              label: label
+              parentValue: parentValue
         hasMore: true
         nextCursor: nextCursor
       properties:
@@ -829,6 +951,29 @@ components:
         minQuantity: 0
         maxQuantity: 6
         purchasable: true
+        inputFields:
+        - key: key
+          type: type
+          required: true
+          regex: regex
+          options:
+          - value: value
+            label: label
+            parentValue: parentValue
+          - value: value
+            label: label
+            parentValue: parentValue
+        - key: key
+          type: type
+          required: true
+          regex: regex
+          options:
+          - value: value
+            label: label
+            parentValue: parentValue
+          - value: value
+            label: label
+            parentValue: parentValue
       properties:
         id:
           description: id identifies the product; use it to place an order for this
@@ -881,6 +1026,17 @@ components:
             now.
           title: purchasable
           type: boolean
+        inputFields:
+          description: |-
+            input_fields are the purchase-form fields this product requires. Empty for a
+             gift card that needs nothing; present for a game top-up. Read them to learn
+             which values to submit on the order line (OrderLine.input_fields, keyed by
+             each field's key) and to validate them before placing the order.
+          items:
+            $ref: "#/components/schemas/sodacards.devpublic.v1.InputFieldSpec"
+          title: input_fields
+          type: array
+          default: null
       title: Product
     sodacards.devpublic.v1.ProductFaceValue:
       additionalProperties: false

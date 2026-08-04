@@ -36,6 +36,8 @@ type SodacardsDevpublicV1Product struct {
 	MaxQuantity *int32 `json:"maxQuantity,omitempty"`
 	// purchasable is true when the item has a price and can be ordered now.
 	Purchasable *bool `json:"purchasable,omitempty"`
+	// input_fields are the purchase-form fields this product requires. Empty for a  gift card that needs nothing; present for a game top-up. Read them to learn  which values to submit on the order line (OrderLine.input_fields, keyed by  each field's key) and to validate them before placing the order.
+	InputFields []SodacardsDevpublicV1InputFieldSpec `json:"inputFields,omitempty"`
 }
 
 // NewSodacardsDevpublicV1Product instantiates a new SodacardsDevpublicV1Product object
@@ -343,6 +345,38 @@ func (o *SodacardsDevpublicV1Product) SetPurchasable(v bool) {
 	o.Purchasable = &v
 }
 
+// GetInputFields returns the InputFields field value if set, zero value otherwise.
+func (o *SodacardsDevpublicV1Product) GetInputFields() []SodacardsDevpublicV1InputFieldSpec {
+	if o == nil || IsNil(o.InputFields) {
+		var ret []SodacardsDevpublicV1InputFieldSpec
+		return ret
+	}
+	return o.InputFields
+}
+
+// GetInputFieldsOk returns a tuple with the InputFields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SodacardsDevpublicV1Product) GetInputFieldsOk() ([]SodacardsDevpublicV1InputFieldSpec, bool) {
+	if o == nil || IsNil(o.InputFields) {
+		return nil, false
+	}
+	return o.InputFields, true
+}
+
+// HasInputFields returns a boolean if a field has been set.
+func (o *SodacardsDevpublicV1Product) HasInputFields() bool {
+	if o != nil && !IsNil(o.InputFields) {
+		return true
+	}
+
+	return false
+}
+
+// SetInputFields gets a reference to the given []SodacardsDevpublicV1InputFieldSpec and assigns it to the InputFields field.
+func (o *SodacardsDevpublicV1Product) SetInputFields(v []SodacardsDevpublicV1InputFieldSpec) {
+	o.InputFields = v
+}
+
 func (o SodacardsDevpublicV1Product) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -379,6 +413,9 @@ func (o SodacardsDevpublicV1Product) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Purchasable) {
 		toSerialize["purchasable"] = o.Purchasable
+	}
+	if !IsNil(o.InputFields) {
+		toSerialize["inputFields"] = o.InputFields
 	}
 	return toSerialize, nil
 }
