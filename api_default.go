@@ -34,7 +34,7 @@ func (r ApiDeleteWebhookRequest) Execute() (map[string]interface{}, *http.Respon
 }
 
 /*
-DeleteWebhook DeleteWebhook
+DeleteWebhook Delete a webhook endpoint
 
 DeleteWebhook removes a webhook endpoint.
 
@@ -140,6 +140,122 @@ func (a *DefaultAPIService) DeleteWebhookExecute(r ApiDeleteWebhookRequest) (map
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiGetBalanceRequest struct {
+	ctx context.Context
+	ApiService *DefaultAPIService
+}
+
+func (r ApiGetBalanceRequest) Execute() (*SodacardsDevpublicV1GetBalanceResponse, *http.Response, error) {
+	return r.ApiService.GetBalanceExecute(r)
+}
+
+/*
+GetBalance Get wallet balance
+
+GetBalance returns the reseller's prepaid wallet balance, the same funds a
+ live order is settled from. It reads only the caller's own wallet. A test key
+ reads a fixed sandbox balance, never the real one, so a test integration can
+ exercise the read without seeing production funds.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiGetBalanceRequest
+*/
+func (a *DefaultAPIService) GetBalance(ctx context.Context) ApiGetBalanceRequest {
+	return ApiGetBalanceRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return SodacardsDevpublicV1GetBalanceResponse
+func (a *DefaultAPIService) GetBalanceExecute(r ApiGetBalanceRequest) (*SodacardsDevpublicV1GetBalanceResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SodacardsDevpublicV1GetBalanceResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.GetBalance")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/v1/balance"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-API-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetOrderRequest struct {
 	ctx context.Context
 	ApiService *DefaultAPIService
@@ -151,7 +267,7 @@ func (r ApiGetOrderRequest) Execute() (*SodacardsDevpublicV1GetOrderResponse, *h
 }
 
 /*
-GetOrder GetOrder
+GetOrder Get an order
 
 GetOrder returns one of the reseller's orders by id, with its lines and
  current status. A live key reads live orders and a test key reads its own
@@ -270,7 +386,7 @@ func (r ApiGetProductRequest) Execute() (*SodacardsDevpublicV1GetProductResponse
 }
 
 /*
-GetProduct GetProduct
+GetProduct Get a product
 
 GetProduct returns a single product by its id, priced for the reseller. The
  id is the one carried by a catalog entry. A product the reseller may not see
@@ -403,7 +519,7 @@ func (r ApiListCatalogRequest) Execute() (*SodacardsDevpublicV1ListCatalogRespon
 }
 
 /*
-ListCatalog ListCatalog
+ListCatalog List catalog products
 
 ListCatalog returns a page of the products the reseller may sell, each with
  the reseller's price. It is cursor-paginated: pass next_cursor from the
@@ -546,7 +662,7 @@ func (r ApiListOrdersRequest) Execute() (*SodacardsDevpublicV1ListOrdersResponse
 }
 
 /*
-ListOrders ListOrders
+ListOrders List orders
 
 ListOrders returns a page of the reseller's orders, newest first. It is
  cursor-paginated: pass next_cursor from the previous page to fetch the next.
@@ -670,7 +786,7 @@ func (r ApiListWebhooksRequest) Execute() (*SodacardsDevpublicV1ListWebhooksResp
 }
 
 /*
-ListWebhooks ListWebhooks
+ListWebhooks List webhook endpoints
 
 ListWebhooks returns the reseller's registered webhook endpoints. It never
  returns their signing secrets.
@@ -904,7 +1020,7 @@ func (r ApiPlaceOrderRequest) Execute() (*SodacardsDevpublicV1PlaceOrderResponse
 }
 
 /*
-PlaceOrder PlaceOrder
+PlaceOrder Place an order
 
 PlaceOrder buys one or more products, settled from the reseller's prepaid
  wallet. It is asynchronous: the order is accepted and fulfilled in the
@@ -1032,7 +1148,7 @@ func (r ApiRegisterWebhookRequest) Execute() (*SodacardsDevpublicV1RegisterWebho
 }
 
 /*
-RegisterWebhook RegisterWebhook
+RegisterWebhook Register a webhook endpoint
 
 RegisterWebhook registers a URL to receive signed event deliveries. The URL
  must be HTTPS and publicly routable. The response carries the signing secret
@@ -1153,7 +1269,7 @@ func (r ApiRevealOrderCodesRequest) Execute() (*SodacardsDevpublicV1RevealOrderC
 }
 
 /*
-RevealOrderCodes RevealOrderCodes
+RevealOrderCodes Reveal order codes
 
 RevealOrderCodes returns the delivered codes of a completed order. Codes are
  available once the order is completed; a still-processing order reports that
@@ -1188,6 +1304,128 @@ func (a *DefaultAPIService) RevealOrderCodesExecute(r ApiRevealOrderCodesRequest
 
 	localVarPath := localBasePath + "/v1/orders/{order_id}/codes"
 	localVarPath = strings.Replace(localVarPath, "{"+"order_id"+"}", url.PathEscape(parameterValueToString(r.orderId, "orderId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-API-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiRotateWebhookSecretRequest struct {
+	ctx context.Context
+	ApiService *DefaultAPIService
+	id string
+}
+
+func (r ApiRotateWebhookSecretRequest) Execute() (*SodacardsDevpublicV1RotateWebhookSecretResponse, *http.Response, error) {
+	return r.ApiService.RotateWebhookSecretExecute(r)
+}
+
+/*
+RotateWebhookSecret Rotate a webhook signing secret
+
+RotateWebhookSecret issues a new signing secret for an endpoint without
+ interrupting deliveries: the new secret is returned once, and the previous one
+ stays valid until prev_secret_expires_at. During that window deliveries are
+ signed with both, so switch your verification to the new secret before the
+ deadline. Rotating again replaces the outgoing secret rather than adding a
+ third, so at most two secrets are ever accepted at once.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param id id is the webhook endpoint whose signing secret to rotate.
+ @return ApiRotateWebhookSecretRequest
+*/
+func (a *DefaultAPIService) RotateWebhookSecret(ctx context.Context, id string) ApiRotateWebhookSecretRequest {
+	return ApiRotateWebhookSecretRequest{
+		ApiService: a,
+		ctx: ctx,
+		id: id,
+	}
+}
+
+// Execute executes the request
+//  @return SodacardsDevpublicV1RotateWebhookSecretResponse
+func (a *DefaultAPIService) RotateWebhookSecretExecute(r ApiRotateWebhookSecretRequest) (*SodacardsDevpublicV1RotateWebhookSecretResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SodacardsDevpublicV1RotateWebhookSecretResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.RotateWebhookSecret")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/v1/webhooks/{id}/rotate"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

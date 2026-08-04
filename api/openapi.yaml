@@ -22,7 +22,7 @@ paths:
          live order is settled from. It reads only the caller's own wallet. A test key
          reads a fixed sandbox balance, never the real one, so a test integration can
          exercise the read without seeing production funds.
-      operationId: PublicAPIService_GetBalance
+      operationId: getBalance
       responses:
         "200":
           content:
@@ -30,9 +30,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetBalanceResponse"
           description: Success
-      summary: GetBalance
-      tags:
-      - PublicAPIService
+      summary: Get wallet balance
   /v1/catalog:
     get:
       description: |-
@@ -71,7 +69,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListCatalogResponse"
           description: Success
-      summary: ListCatalog
+      summary: List catalog products
   /v1/orders:
     get:
       description: |-
@@ -120,7 +118,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListOrdersResponse"
           description: Success
-      summary: ListOrders
+      summary: List orders
     post:
       description: |-
         PlaceOrder buys one or more products, settled from the reseller's prepaid
@@ -142,7 +140,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.PlaceOrderResponse"
           description: Success
-      summary: PlaceOrder
+      summary: Place an order
   /v1/orders/{id}:
     get:
       description: |-
@@ -167,7 +165,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetOrderResponse"
           description: Success
-      summary: GetOrder
+      summary: Get an order
   /v1/orders/{order_id}/codes:
     get:
       description: |-
@@ -192,7 +190,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RevealOrderCodesResponse"
           description: Success
-      summary: RevealOrderCodes
+      summary: Reveal order codes
   /v1/ping:
     get:
       description: |-
@@ -232,7 +230,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetProductResponse"
           description: Success
-      summary: GetProduct
+      summary: Get a product
   /v1/webhooks:
     get:
       description: |-
@@ -246,7 +244,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListWebhooksResponse"
           description: Success
-      summary: ListWebhooks
+      summary: List webhook endpoints
     post:
       description: |-
         RegisterWebhook registers a URL to receive signed event deliveries. The URL
@@ -266,7 +264,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RegisterWebhookResponse"
           description: Success
-      summary: RegisterWebhook
+      summary: Register a webhook endpoint
   /v1/webhooks/{id}:
     delete:
       description: DeleteWebhook removes a webhook endpoint.
@@ -288,7 +286,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.DeleteWebhookResponse"
           description: Success
-      summary: DeleteWebhook
+      summary: Delete a webhook endpoint
   /v1/webhooks/{id}/rotate:
     post:
       description: |-
@@ -298,7 +296,7 @@ paths:
          signed with both, so switch your verification to the new secret before the
          deadline. Rotating again replaces the outgoing secret rather than adding a
          third, so at most two secrets are ever accepted at once.
-      operationId: PublicAPIService_RotateWebhookSecret
+      operationId: rotateWebhookSecret
       parameters:
       - description: id is the webhook endpoint whose signing secret to rotate.
         explode: false
@@ -316,9 +314,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RotateWebhookSecretResponse"
           description: Success
-      summary: RotateWebhookSecret
-      tags:
-      - PublicAPIService
+      summary: Rotate a webhook signing secret
 components:
   schemas:
     sodacards.devpublic.v1.DeleteWebhookRequest:
@@ -925,8 +921,8 @@ components:
           type: string
         status:
           description: |-
-            status is the order's current state, e.g. "pending", "processing",
-             "completed", "partially_completed", "failed" or "refunded".
+            status is the order's current state: "pending", "processing", "completed",
+             "failed" or "refunded".
           title: status
           type: string
         total:

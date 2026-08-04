@@ -21,7 +21,7 @@ var _ MappedNullable = &SodacardsDevpublicV1PlacedOrder{}
 type SodacardsDevpublicV1PlacedOrder struct {
 	// id identifies the order; use it to poll the order and reveal its codes.
 	Id *string `json:"id,omitempty"`
-	// status is the order's current state, e.g. \"pending\", \"processing\",  \"completed\", \"partially_completed\", \"failed\" or \"refunded\".
+	// status is the order's current state: \"pending\", \"processing\", \"completed\",  \"failed\" or \"refunded\".
 	Status *string `json:"status,omitempty"`
 	// total is the amount charged to the reseller's wallet, in the currency of Money.
 	Total *SodacardsDevpublicV1Money `json:"total,omitempty"`

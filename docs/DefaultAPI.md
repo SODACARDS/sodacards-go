@@ -4,16 +4,18 @@ All URIs are relative to *https://api.sodacards.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**DeleteWebhook**](DefaultAPI.md#DeleteWebhook) | **Delete** /v1/webhooks/{id} | DeleteWebhook
-[**GetOrder**](DefaultAPI.md#GetOrder) | **Get** /v1/orders/{id} | GetOrder
-[**GetProduct**](DefaultAPI.md#GetProduct) | **Get** /v1/products/{id} | GetProduct
-[**ListCatalog**](DefaultAPI.md#ListCatalog) | **Get** /v1/catalog | ListCatalog
-[**ListOrders**](DefaultAPI.md#ListOrders) | **Get** /v1/orders | ListOrders
-[**ListWebhooks**](DefaultAPI.md#ListWebhooks) | **Get** /v1/webhooks | ListWebhooks
+[**DeleteWebhook**](DefaultAPI.md#DeleteWebhook) | **Delete** /v1/webhooks/{id} | Delete a webhook endpoint
+[**GetBalance**](DefaultAPI.md#GetBalance) | **Get** /v1/balance | Get wallet balance
+[**GetOrder**](DefaultAPI.md#GetOrder) | **Get** /v1/orders/{id} | Get an order
+[**GetProduct**](DefaultAPI.md#GetProduct) | **Get** /v1/products/{id} | Get a product
+[**ListCatalog**](DefaultAPI.md#ListCatalog) | **Get** /v1/catalog | List catalog products
+[**ListOrders**](DefaultAPI.md#ListOrders) | **Get** /v1/orders | List orders
+[**ListWebhooks**](DefaultAPI.md#ListWebhooks) | **Get** /v1/webhooks | List webhook endpoints
 [**Ping**](DefaultAPI.md#Ping) | **Get** /v1/ping | Ping
-[**PlaceOrder**](DefaultAPI.md#PlaceOrder) | **Post** /v1/orders | PlaceOrder
-[**RegisterWebhook**](DefaultAPI.md#RegisterWebhook) | **Post** /v1/webhooks | RegisterWebhook
-[**RevealOrderCodes**](DefaultAPI.md#RevealOrderCodes) | **Get** /v1/orders/{order_id}/codes | RevealOrderCodes
+[**PlaceOrder**](DefaultAPI.md#PlaceOrder) | **Post** /v1/orders | Place an order
+[**RegisterWebhook**](DefaultAPI.md#RegisterWebhook) | **Post** /v1/webhooks | Register a webhook endpoint
+[**RevealOrderCodes**](DefaultAPI.md#RevealOrderCodes) | **Get** /v1/orders/{order_id}/codes | Reveal order codes
+[**RotateWebhookSecret**](DefaultAPI.md#RotateWebhookSecret) | **Post** /v1/webhooks/{id}/rotate | Rotate a webhook signing secret
 
 
 
@@ -21,7 +23,7 @@ Method | HTTP request | Description
 
 > map[string]interface{} DeleteWebhook(ctx, id).Execute()
 
-DeleteWebhook
+Delete a webhook endpoint
 
 
 
@@ -87,11 +89,72 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetBalance
+
+> SodacardsDevpublicV1GetBalanceResponse GetBalance(ctx).Execute()
+
+Get wallet balance
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/SODACARDS/sodacards-go"
+)
+
+func main() {
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.DefaultAPI.GetBalance(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `DefaultAPI.GetBalance``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetBalance`: SodacardsDevpublicV1GetBalanceResponse
+	fmt.Fprintf(os.Stdout, "Response from `DefaultAPI.GetBalance`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetBalanceRequest struct via the builder pattern
+
+
+### Return type
+
+[**SodacardsDevpublicV1GetBalanceResponse**](SodacardsDevpublicV1GetBalanceResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetOrder
 
 > SodacardsDevpublicV1GetOrderResponse GetOrder(ctx, id).Execute()
 
-GetOrder
+Get an order
 
 
 
@@ -161,7 +224,7 @@ Name | Type | Description  | Notes
 
 > SodacardsDevpublicV1GetProductResponse GetProduct(ctx, id).Execute()
 
-GetProduct
+Get a product
 
 
 
@@ -231,7 +294,7 @@ Name | Type | Description  | Notes
 
 > SodacardsDevpublicV1ListCatalogResponse ListCatalog(ctx).Limit(limit).Cursor(cursor).Execute()
 
-ListCatalog
+List catalog products
 
 
 
@@ -299,7 +362,7 @@ Name | Type | Description  | Notes
 
 > SodacardsDevpublicV1ListOrdersResponse ListOrders(ctx).Limit(limit).Cursor(cursor).Reference(reference).Execute()
 
-ListOrders
+List orders
 
 
 
@@ -369,7 +432,7 @@ Name | Type | Description  | Notes
 
 > SodacardsDevpublicV1ListWebhooksResponse ListWebhooks(ctx).Execute()
 
-ListWebhooks
+List webhook endpoints
 
 
 
@@ -491,7 +554,7 @@ Other parameters are passed through a pointer to a apiPingRequest struct via the
 
 > SodacardsDevpublicV1PlaceOrderResponse PlaceOrder(ctx).SodacardsDevpublicV1PlaceOrderRequest(sodacardsDevpublicV1PlaceOrderRequest).Execute()
 
-PlaceOrder
+Place an order
 
 
 
@@ -557,7 +620,7 @@ Name | Type | Description  | Notes
 
 > SodacardsDevpublicV1RegisterWebhookResponse RegisterWebhook(ctx).SodacardsDevpublicV1RegisterWebhookRequest(sodacardsDevpublicV1RegisterWebhookRequest).Execute()
 
-RegisterWebhook
+Register a webhook endpoint
 
 
 
@@ -623,7 +686,7 @@ Name | Type | Description  | Notes
 
 > SodacardsDevpublicV1RevealOrderCodesResponse RevealOrderCodes(ctx, orderId).Execute()
 
-RevealOrderCodes
+Reveal order codes
 
 
 
@@ -674,6 +737,76 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**SodacardsDevpublicV1RevealOrderCodesResponse**](SodacardsDevpublicV1RevealOrderCodesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## RotateWebhookSecret
+
+> SodacardsDevpublicV1RotateWebhookSecretResponse RotateWebhookSecret(ctx, id).Execute()
+
+Rotate a webhook signing secret
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/SODACARDS/sodacards-go"
+)
+
+func main() {
+	id := "id_example" // string | id is the webhook endpoint whose signing secret to rotate.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.DefaultAPI.RotateWebhookSecret(context.Background(), id).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `DefaultAPI.RotateWebhookSecret``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `RotateWebhookSecret`: SodacardsDevpublicV1RotateWebhookSecretResponse
+	fmt.Fprintf(os.Stdout, "Response from `DefaultAPI.RotateWebhookSecret`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**id** | **string** | id is the webhook endpoint whose signing secret to rotate. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiRotateWebhookSecretRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**SodacardsDevpublicV1RotateWebhookSecretResponse**](SodacardsDevpublicV1RotateWebhookSecretResponse.md)
 
 ### Authorization
 

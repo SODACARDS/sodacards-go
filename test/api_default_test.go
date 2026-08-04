@@ -36,6 +36,18 @@ func Test_sodacards_DefaultAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test DefaultAPIService GetBalance", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.DefaultAPI.GetBalance(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test DefaultAPIService GetOrder", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -143,6 +155,20 @@ func Test_sodacards_DefaultAPIService(t *testing.T) {
 		var orderId string
 
 		resp, httpRes, err := apiClient.DefaultAPI.RevealOrderCodes(context.Background(), orderId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test DefaultAPIService RotateWebhookSecret", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var id string
+
+		resp, httpRes, err := apiClient.DefaultAPI.RotateWebhookSecret(context.Background(), id).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
