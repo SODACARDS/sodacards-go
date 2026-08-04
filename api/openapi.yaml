@@ -15,6 +15,24 @@ tags:
      authenticated by the API-key gateway that fronts it.
   name: PublicAPIService
 paths:
+  /v1/balance:
+    get:
+      description: |-
+        GetBalance returns the reseller's prepaid wallet balance, the same funds a
+         live order is settled from. It reads only the caller's own wallet. A test key
+         reads a fixed sandbox balance, never the real one, so a test integration can
+         exercise the read without seeing production funds.
+      operationId: PublicAPIService_GetBalance
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sodacards.devpublic.v1.GetBalanceResponse"
+          description: Success
+      summary: GetBalance
+      tags:
+      - PublicAPIService
   /v1/catalog:
     get:
       description: |-
@@ -285,6 +303,28 @@ components:
       additionalProperties: false
       title: DeleteWebhookResponse
       type: object
+    sodacards.devpublic.v1.GetBalanceRequest:
+      additionalProperties:
+        nullable: true
+      description: |-
+        Money is an amount in a currency's minor units, together with the currency's
+         ISO-4217 code and its number of decimal places, so the amount can be
+         interpreted without assuming the currency. XOF (the West-African CFA franc) has
+         no minor unit, so an XOF amount is a whole franc value.
+      title: GetBalanceRequest
+    sodacards.devpublic.v1.GetBalanceResponse:
+      additionalProperties: false
+      example:
+        balance: ""
+      properties:
+        balance:
+          allOf:
+          - $ref: "#/components/schemas/sodacards.devpublic.v1.Money"
+          description: |-
+            balance is the reseller's prepaid wallet balance. For a test key it is a
+             fixed sandbox value, clearly not the production wallet.
+          title: balance
+      title: GetBalanceResponse
     sodacards.devpublic.v1.GetOrderRequest:
       additionalProperties: {}
       properties:
@@ -498,11 +538,6 @@ components:
       title: ListWebhooksResponse
     sodacards.devpublic.v1.Money:
       additionalProperties: false
-      description: |-
-        Money is an amount in a currency's minor units, together with the currency's
-         ISO-4217 code and its number of decimal places, so the amount can be
-         interpreted without assuming the currency. XOF (the West-African CFA franc) has
-         no minor unit, so an XOF amount is a whole franc value.
       properties:
         amount:
           $ref: "#/components/schemas/amount"

@@ -4,11 +4,14 @@
 README.md
 api/openapi.yaml
 api_default.go
+api_public_api_service.go
 client.go
 configuration.go
 docs/Amount.md
 docs/DefaultAPI.md
+docs/PublicAPIServiceAPI.md
 docs/SodacardsDevpublicV1DeleteWebhookRequest.md
+docs/SodacardsDevpublicV1GetBalanceResponse.md
 docs/SodacardsDevpublicV1GetOrderRequest.md
 docs/SodacardsDevpublicV1GetOrderResponse.md
 docs/SodacardsDevpublicV1GetProductRequest.md
@@ -41,6 +44,7 @@ go.mod
 go.sum
 model_amount.go
 model_sodacards_devpublic_v1_delete_webhook_request.go
+model_sodacards_devpublic_v1_get_balance_response.go
 model_sodacards_devpublic_v1_get_order_request.go
 model_sodacards_devpublic_v1_get_order_response.go
 model_sodacards_devpublic_v1_get_product_request.go
@@ -70,4 +74,5 @@ model_sodacards_devpublic_v1_revealed_code.go
 model_sodacards_devpublic_v1_webhook.go
 response.go
 test/api_default_test.go
+test/api_public_api_service_test.go
 utils.go

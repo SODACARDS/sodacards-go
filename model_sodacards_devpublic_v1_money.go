@@ -17,7 +17,7 @@ import (
 // checks if the SodacardsDevpublicV1Money type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &SodacardsDevpublicV1Money{}
 
-// SodacardsDevpublicV1Money Money is an amount in a currency's minor units, together with the currency's  ISO-4217 code and its number of decimal places, so the amount can be  interpreted without assuming the currency. XOF (the West-African CFA franc) has  no minor unit, so an XOF amount is a whole franc value.
+// SodacardsDevpublicV1Money struct for SodacardsDevpublicV1Money
 type SodacardsDevpublicV1Money struct {
 	Amount *Amount `json:"amount,omitempty"`
 	// currency is the ISO-4217 code, e.g. \"XOF\".
