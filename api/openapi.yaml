@@ -30,6 +30,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetBalanceResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Get wallet balance
   /v1/catalog:
     get:
@@ -69,6 +79,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListCatalogResponse"
           description: Success
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: List catalog products
   /v1/orders:
     get:
@@ -118,6 +140,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListOrdersResponse"
           description: Success
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: List orders
     post:
       description: |-
@@ -127,6 +161,17 @@ paths:
          request MUST carry an Idempotency-Key header, so a retried request never
          places a second order.
       operationId: placeOrder
+      parameters:
+      - description: "A unique key that makes order placement safe to retry: a retried\
+          \ request with the same key never places a second order. Reusing a key with\
+          \ a different body is rejected. Use a UUID you generate per order."
+        explode: false
+        in: header
+        name: Idempotency-Key
+        required: true
+        schema:
+          type: string
+        style: simple
       requestBody:
         content:
           application/json:
@@ -140,6 +185,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.PlaceOrderResponse"
           description: Success
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/PaymentRequired"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Place an order
   /v1/orders/{id}:
     get:
@@ -165,6 +228,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetOrderResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Get an order
   /v1/orders/{order_id}/codes:
     get:
@@ -190,6 +265,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RevealOrderCodesResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Reveal order codes
   /v1/ping:
     get:
@@ -204,6 +293,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.PingResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Ping
   /v1/products/{id}:
     get:
@@ -230,6 +327,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetProductResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Get a product
   /v1/webhooks:
     get:
@@ -244,6 +353,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListWebhooksResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: List webhook endpoints
     post:
       description: |-
@@ -264,6 +385,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RegisterWebhookResponse"
           description: Success
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Register a webhook endpoint
   /v1/webhooks/{id}:
     delete:
@@ -286,6 +421,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.DeleteWebhookResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Delete a webhook endpoint
   /v1/webhooks/{id}/rotate:
     post:
@@ -314,8 +463,98 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RotateWebhookSecretResponse"
           description: Success
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/DefaultError"
       summary: Rotate a webhook signing secret
 components:
+  responses:
+    BadRequest:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: "The request was not valid (e.g. a malformed body, a bad cursor,\
+        \ an invalid webhook URL)."
+    Unauthorized:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: "The API key is missing, malformed, revoked or expired."
+    PaymentRequired:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: The wallet balance does not cover the order.
+    Forbidden:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: "The key lacks the scope required for this action, or the account\
+        \ is not an approved reseller."
+    NotFound:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: The requested resource does not exist or is not visible to this
+        key.
+    Conflict:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: "The request conflicts with the current state (an in-flight idempotent\
+        \ retry, or an order not yet ready)."
+    UnprocessableEntity:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: "The request was well-formed but could not be processed (an Idempotency-Key\
+        \ reused with a different body, or an over-ceiling order total)."
+    TooManyRequests:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: The request rate for this key was exceeded. Retry after a short
+        delay.
+    ServiceUnavailable:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: "The feature is not configured on this service, or it is temporarily\
+        \ unavailable."
+    InternalServerError:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: An unexpected error occurred. The cause is never leaked in the
+        body.
+    DefaultError:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+      description: An error occurred. The body is an RFC 9457 problem document whose
+        `code` names the specific reason.
   schemas:
     sodacards.devpublic.v1.DeleteWebhookRequest:
       additionalProperties: {}
@@ -1192,6 +1431,37 @@ components:
           title: created_at
           type: string
       title: Webhook
+    ProblemDetails:
+      description: "An RFC 9457 problem document. Every error response uses this shape.\
+        \ Switch on `code` (stable, machine-readable), never on `title` or `detail`\
+        \ (human copy, may change). `status` mirrors the HTTP status."
+      properties:
+        type:
+          description: "A URI identifying the error type, e.g. https://developer.sodacards.com/errors/insufficient_balance."
+          format: uri
+          type: string
+        title:
+          description: "A short, human-readable summary of the error."
+          type: string
+        status:
+          description: "The HTTP status code, repeated for convenience."
+          type: integer
+        code:
+          description: "A stable, machine-readable error code, e.g. insufficient_balance.\
+            \ Switch on this."
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence.
+          type: string
+        request_id:
+          description: "The request identifier, to quote when contacting support."
+          type: string
+      required:
+      - code
+      - status
+      - title
+      - type
+      title: ProblemDetails
     amount:
       anyOf:
       - format: int32
