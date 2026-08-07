@@ -19,7 +19,7 @@ var _ MappedNullable = &SodacardsDevpublicV1PlaceOrderResponse{}
 
 // SodacardsDevpublicV1PlaceOrderResponse struct for SodacardsDevpublicV1PlaceOrderResponse
 type SodacardsDevpublicV1PlaceOrderResponse struct {
-	// order is the accepted order. Its status is pending until fulfillment  completes; poll the order to follow it.
+	// order is the accepted order. It is settled from the wallet at placement, so it  is born already paid: its status is \"processing\" while it is being fulfilled,  or \"completed\" when fulfillment is immediate. It is never \"pending\" -- the  developer API charges synchronously, so an order awaiting payment is not a  state it produces. Poll the order to follow it to \"completed\".
 	Order *SodacardsDevpublicV1PlacedOrder `json:"order,omitempty"`
 }
 

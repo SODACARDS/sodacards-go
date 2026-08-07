@@ -443,22 +443,10 @@ components:
       - status
       - title
       - type
-    sodacards.devpublic.v1.DeleteWebhookRequest:
-      additionalProperties: {}
-      properties:
-        id:
-          description: id is the webhook endpoint to remove.
-          title: id
-          type: string
-      title: DeleteWebhookRequest
     sodacards.devpublic.v1.DeleteWebhookResponse:
       additionalProperties: false
       title: DeleteWebhookResponse
       type: object
-    sodacards.devpublic.v1.GetBalanceRequest:
-      additionalProperties:
-        nullable: true
-      title: GetBalanceRequest
     sodacards.devpublic.v1.GetBalanceResponse:
       additionalProperties: false
       example:
@@ -472,14 +460,6 @@ components:
              fixed sandbox value, clearly not the production wallet.
           title: balance
       title: GetBalanceResponse
-    sodacards.devpublic.v1.GetOrderRequest:
-      additionalProperties: {}
-      properties:
-        id:
-          description: "id is the order id, from PlaceOrder."
-          title: id
-          type: string
-      title: GetOrderRequest
     sodacards.devpublic.v1.GetOrderResponse:
       additionalProperties: false
       example:
@@ -491,14 +471,6 @@ components:
           description: order is the requested order.
           title: order
       title: GetOrderResponse
-    sodacards.devpublic.v1.GetProductRequest:
-      additionalProperties: {}
-      properties:
-        id:
-          description: "id is the product id, taken from a catalog entry."
-          title: id
-          type: string
-      title: GetProductRequest
     sodacards.devpublic.v1.GetProductResponse:
       additionalProperties: false
       example:
@@ -586,22 +558,6 @@ components:
           type: array
           default: null
       title: InputFieldSpec
-    sodacards.devpublic.v1.ListCatalogRequest:
-      additionalProperties: {}
-      properties:
-        limit:
-          description: |-
-            limit is the maximum number of products to return (1..100). Zero applies the
-             default page size.
-          format: int32
-          title: limit
-          type: integer
-        cursor:
-          description: cursor is the next_cursor of the previous page. Empty for the
-            first page.
-          title: cursor
-          type: string
-      title: ListCatalogRequest
     sodacards.devpublic.v1.ListCatalogResponse:
       additionalProperties: false
       example:
@@ -689,28 +645,6 @@ components:
           title: next_cursor
           type: string
       title: ListCatalogResponse
-    sodacards.devpublic.v1.ListOrdersRequest:
-      additionalProperties: {}
-      properties:
-        limit:
-          description: |-
-            limit is the maximum number of orders to return (1..100). Zero applies the
-             default page size.
-          format: int32
-          title: limit
-          type: integer
-        cursor:
-          description: cursor is the next_cursor of the previous page. Empty for the
-            first page.
-          title: cursor
-          type: string
-        reference:
-          description: |-
-            reference, when set, filters the list to the orders carrying that client
-             reference. The cursor is ignored when a reference is given.
-          title: reference
-          type: string
-      title: ListOrdersRequest
     sodacards.devpublic.v1.ListOrdersResponse:
       additionalProperties: false
       example:
@@ -774,10 +708,6 @@ components:
           title: next_cursor
           type: string
       title: ListOrdersResponse
-    sodacards.devpublic.v1.ListWebhooksRequest:
-      additionalProperties:
-        nullable: true
-      title: ListWebhooksRequest
     sodacards.devpublic.v1.ListWebhooksResponse:
       additionalProperties: false
       example:
@@ -823,6 +753,8 @@ components:
           description: |-
             minor_unit_exponent is the currency's number of decimal places (0 for XOF,
              2 for USD): amount divided by 10^minor_unit_exponent is the major-unit value.
+             The example is 0 on purpose: XOF has no minor unit, and an explicit example
+             keeps the field visible in the docs even though its value is a zero.
           format: int32
           title: minor_unit_exponent
           type: integer
@@ -937,16 +869,6 @@ components:
             line.
           title: input_fields
       title: OrderItem
-    sodacards.devpublic.v1.OrderItem.InputFieldsEntry:
-      additionalProperties: {}
-      properties:
-        key:
-          title: key
-          type: string
-        value:
-          title: value
-          type: string
-      title: InputFieldsEntry
     sodacards.devpublic.v1.OrderLine:
       additionalProperties: false
       description: |-
@@ -972,20 +894,6 @@ components:
             \ by field name."
           title: input_fields
       title: OrderLine
-    sodacards.devpublic.v1.OrderLine.InputFieldsEntry:
-      additionalProperties: false
-      properties:
-        key:
-          title: key
-          type: string
-        value:
-          title: value
-          type: string
-      title: InputFieldsEntry
-    sodacards.devpublic.v1.PingRequest:
-      additionalProperties:
-        nullable: true
-      title: PingRequest
     sodacards.devpublic.v1.PingResponse:
       additionalProperties: false
       example:
@@ -1036,8 +944,11 @@ components:
           allOf:
           - $ref: "#/components/schemas/sodacards.devpublic.v1.PlacedOrder"
           description: |-
-            order is the accepted order. Its status is pending until fulfillment
-             completes; poll the order to follow it.
+            order is the accepted order. It is settled from the wallet at placement, so it
+             is born already paid: its status is "processing" while it is being fulfilled,
+             or "completed" when fulfillment is immediate. It is never "pending" -- the
+             developer API charges synchronously, so an order awaiting payment is not a
+             state it produces. Poll the order to follow it to "completed".
           title: order
       title: PlaceOrderResponse
     sodacards.devpublic.v1.PlacedOrder:
@@ -1225,14 +1136,6 @@ components:
           title: secret
           type: string
       title: RegisterWebhookResponse
-    sodacards.devpublic.v1.RevealOrderCodesRequest:
-      additionalProperties: {}
-      properties:
-        id:
-          description: id is the order whose codes to reveal.
-          title: id
-          type: string
-      title: RevealOrderCodesRequest
     sodacards.devpublic.v1.RevealOrderCodesResponse:
       additionalProperties: false
       example:
@@ -1267,14 +1170,6 @@ components:
           title: code
           type: string
       title: RevealedCode
-    sodacards.devpublic.v1.RotateWebhookSecretRequest:
-      additionalProperties: {}
-      properties:
-        id:
-          description: id is the webhook endpoint whose signing secret to rotate.
-          title: id
-          type: string
-      title: RotateWebhookSecretRequest
     sodacards.devpublic.v1.RotateWebhookSecretResponse:
       additionalProperties: false
       example:

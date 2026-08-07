@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Amount** | Pointer to [**Amount**](Amount.md) |  | [optional] 
 **Currency** | Pointer to **string** | currency is the ISO-4217 code, e.g. \&quot;XOF\&quot;. | [optional] 
-**MinorUnitExponent** | Pointer to **int32** | minor_unit_exponent is the currency&#39;s number of decimal places (0 for XOF,  2 for USD): amount divided by 10^minor_unit_exponent is the major-unit value. | [optional] 
+**MinorUnitExponent** | Pointer to **int32** | minor_unit_exponent is the currency&#39;s number of decimal places (0 for XOF,  2 for USD): amount divided by 10^minor_unit_exponent is the major-unit value.  The example is 0 on purpose: XOF has no minor unit, and an explicit example  keeps the field visible in the docs even though its value is a zero. | [optional] 
 
 ## Methods
 
