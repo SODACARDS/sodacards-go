@@ -16,33 +16,33 @@ import (
 	"fmt"
 )
 
-// checks if the ProblemDetails type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ProblemDetails{}
+// checks if the Problem type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &Problem{}
 
-// ProblemDetails An RFC 9457 problem document. Every error response uses this shape. Switch on `code` (stable, machine-readable), never on `title` or `detail` (human copy, may change). `status` mirrors the HTTP status.
-type ProblemDetails struct {
-	// A URI identifying the error type, e.g. https://developer.sodacards.com/errors/insufficient_balance.
+// Problem An RFC 9457 problem+json error. Switch on `code`, the stable machine-readable reason; the HTTP status frames the broad category.
+type Problem struct {
+	// A stable URI identifying the error kind; it resolves to the docs section for that code.
 	Type string `json:"type"`
-	// A short, human-readable summary of the error.
+	// A short, human-readable summary of the error kind.
 	Title string `json:"title"`
-	// The HTTP status code, repeated for convenience.
+	// The HTTP status code, repeated in the body for convenience.
 	Status int32 `json:"status"`
-	// A stable, machine-readable error code, e.g. insufficient_balance. Switch on this.
+	// The machine-readable reason (e.g. \"insufficient_balance\"): switch on this, never on the human text.
 	Code string `json:"code"`
-	// A human-readable explanation specific to this occurrence.
+	// A human-readable explanation of this specific occurrence. May be absent.
 	Detail *string `json:"detail,omitempty"`
-	// The request identifier, to quote when contacting support.
+	// Identifies this request in support conversations. May be absent.
 	RequestId *string `json:"request_id,omitempty"`
 }
 
-type _ProblemDetails ProblemDetails
+type _Problem Problem
 
-// NewProblemDetails instantiates a new ProblemDetails object
+// NewProblem instantiates a new Problem object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewProblemDetails(type_ string, title string, status int32, code string) *ProblemDetails {
-	this := ProblemDetails{}
+func NewProblem(type_ string, title string, status int32, code string) *Problem {
+	this := Problem{}
 	this.Type = type_
 	this.Title = title
 	this.Status = status
@@ -50,16 +50,16 @@ func NewProblemDetails(type_ string, title string, status int32, code string) *P
 	return &this
 }
 
-// NewProblemDetailsWithDefaults instantiates a new ProblemDetails object
+// NewProblemWithDefaults instantiates a new Problem object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewProblemDetailsWithDefaults() *ProblemDetails {
-	this := ProblemDetails{}
+func NewProblemWithDefaults() *Problem {
+	this := Problem{}
 	return &this
 }
 
 // GetType returns the Type field value
-func (o *ProblemDetails) GetType() string {
+func (o *Problem) GetType() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -70,7 +70,7 @@ func (o *ProblemDetails) GetType() string {
 
 // GetTypeOk returns a tuple with the Type field value
 // and a boolean to check if the value has been set.
-func (o *ProblemDetails) GetTypeOk() (*string, bool) {
+func (o *Problem) GetTypeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -78,12 +78,12 @@ func (o *ProblemDetails) GetTypeOk() (*string, bool) {
 }
 
 // SetType sets field value
-func (o *ProblemDetails) SetType(v string) {
+func (o *Problem) SetType(v string) {
 	o.Type = v
 }
 
 // GetTitle returns the Title field value
-func (o *ProblemDetails) GetTitle() string {
+func (o *Problem) GetTitle() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -94,7 +94,7 @@ func (o *ProblemDetails) GetTitle() string {
 
 // GetTitleOk returns a tuple with the Title field value
 // and a boolean to check if the value has been set.
-func (o *ProblemDetails) GetTitleOk() (*string, bool) {
+func (o *Problem) GetTitleOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -102,12 +102,12 @@ func (o *ProblemDetails) GetTitleOk() (*string, bool) {
 }
 
 // SetTitle sets field value
-func (o *ProblemDetails) SetTitle(v string) {
+func (o *Problem) SetTitle(v string) {
 	o.Title = v
 }
 
 // GetStatus returns the Status field value
-func (o *ProblemDetails) GetStatus() int32 {
+func (o *Problem) GetStatus() int32 {
 	if o == nil {
 		var ret int32
 		return ret
@@ -118,7 +118,7 @@ func (o *ProblemDetails) GetStatus() int32 {
 
 // GetStatusOk returns a tuple with the Status field value
 // and a boolean to check if the value has been set.
-func (o *ProblemDetails) GetStatusOk() (*int32, bool) {
+func (o *Problem) GetStatusOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -126,12 +126,12 @@ func (o *ProblemDetails) GetStatusOk() (*int32, bool) {
 }
 
 // SetStatus sets field value
-func (o *ProblemDetails) SetStatus(v int32) {
+func (o *Problem) SetStatus(v int32) {
 	o.Status = v
 }
 
 // GetCode returns the Code field value
-func (o *ProblemDetails) GetCode() string {
+func (o *Problem) GetCode() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -142,7 +142,7 @@ func (o *ProblemDetails) GetCode() string {
 
 // GetCodeOk returns a tuple with the Code field value
 // and a boolean to check if the value has been set.
-func (o *ProblemDetails) GetCodeOk() (*string, bool) {
+func (o *Problem) GetCodeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -150,12 +150,12 @@ func (o *ProblemDetails) GetCodeOk() (*string, bool) {
 }
 
 // SetCode sets field value
-func (o *ProblemDetails) SetCode(v string) {
+func (o *Problem) SetCode(v string) {
 	o.Code = v
 }
 
 // GetDetail returns the Detail field value if set, zero value otherwise.
-func (o *ProblemDetails) GetDetail() string {
+func (o *Problem) GetDetail() string {
 	if o == nil || IsNil(o.Detail) {
 		var ret string
 		return ret
@@ -165,7 +165,7 @@ func (o *ProblemDetails) GetDetail() string {
 
 // GetDetailOk returns a tuple with the Detail field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ProblemDetails) GetDetailOk() (*string, bool) {
+func (o *Problem) GetDetailOk() (*string, bool) {
 	if o == nil || IsNil(o.Detail) {
 		return nil, false
 	}
@@ -173,7 +173,7 @@ func (o *ProblemDetails) GetDetailOk() (*string, bool) {
 }
 
 // HasDetail returns a boolean if a field has been set.
-func (o *ProblemDetails) HasDetail() bool {
+func (o *Problem) HasDetail() bool {
 	if o != nil && !IsNil(o.Detail) {
 		return true
 	}
@@ -182,12 +182,12 @@ func (o *ProblemDetails) HasDetail() bool {
 }
 
 // SetDetail gets a reference to the given string and assigns it to the Detail field.
-func (o *ProblemDetails) SetDetail(v string) {
+func (o *Problem) SetDetail(v string) {
 	o.Detail = &v
 }
 
 // GetRequestId returns the RequestId field value if set, zero value otherwise.
-func (o *ProblemDetails) GetRequestId() string {
+func (o *Problem) GetRequestId() string {
 	if o == nil || IsNil(o.RequestId) {
 		var ret string
 		return ret
@@ -197,7 +197,7 @@ func (o *ProblemDetails) GetRequestId() string {
 
 // GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ProblemDetails) GetRequestIdOk() (*string, bool) {
+func (o *Problem) GetRequestIdOk() (*string, bool) {
 	if o == nil || IsNil(o.RequestId) {
 		return nil, false
 	}
@@ -205,7 +205,7 @@ func (o *ProblemDetails) GetRequestIdOk() (*string, bool) {
 }
 
 // HasRequestId returns a boolean if a field has been set.
-func (o *ProblemDetails) HasRequestId() bool {
+func (o *Problem) HasRequestId() bool {
 	if o != nil && !IsNil(o.RequestId) {
 		return true
 	}
@@ -214,11 +214,11 @@ func (o *ProblemDetails) HasRequestId() bool {
 }
 
 // SetRequestId gets a reference to the given string and assigns it to the RequestId field.
-func (o *ProblemDetails) SetRequestId(v string) {
+func (o *Problem) SetRequestId(v string) {
 	o.RequestId = &v
 }
 
-func (o ProblemDetails) MarshalJSON() ([]byte, error) {
+func (o Problem) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -226,7 +226,7 @@ func (o ProblemDetails) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o ProblemDetails) ToMap() (map[string]interface{}, error) {
+func (o Problem) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["type"] = o.Type
 	toSerialize["title"] = o.Title
@@ -241,7 +241,7 @@ func (o ProblemDetails) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *ProblemDetails) UnmarshalJSON(data []byte) (err error) {
+func (o *Problem) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -266,53 +266,53 @@ func (o *ProblemDetails) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varProblemDetails := _ProblemDetails{}
+	varProblem := _Problem{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varProblemDetails)
+	err = decoder.Decode(&varProblem)
 
 	if err != nil {
 		return err
 	}
 
-	*o = ProblemDetails(varProblemDetails)
+	*o = Problem(varProblem)
 
 	return err
 }
 
-type NullableProblemDetails struct {
-	value *ProblemDetails
+type NullableProblem struct {
+	value *Problem
 	isSet bool
 }
 
-func (v NullableProblemDetails) Get() *ProblemDetails {
+func (v NullableProblem) Get() *Problem {
 	return v.value
 }
 
-func (v *NullableProblemDetails) Set(val *ProblemDetails) {
+func (v *NullableProblem) Set(val *Problem) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableProblemDetails) IsSet() bool {
+func (v NullableProblem) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableProblemDetails) Unset() {
+func (v *NullableProblem) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableProblemDetails(val *ProblemDetails) *NullableProblemDetails {
-	return &NullableProblemDetails{value: val, isSet: true}
+func NewNullableProblem(val *Problem) *NullableProblem {
+	return &NullableProblem{value: val, isSet: true}
 }
 
-func (v NullableProblemDetails) MarshalJSON() ([]byte, error) {
+func (v NullableProblem) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableProblemDetails) UnmarshalJSON(src []byte) error {
+func (v *NullableProblem) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

@@ -30,16 +30,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetBalanceResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Get wallet balance
   /v1/catalog:
     get:
@@ -79,18 +76,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListCatalogResponse"
           description: Success
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: List catalog products
   /v1/orders:
     get:
@@ -140,18 +132,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListOrdersResponse"
           description: Success
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: List orders
     post:
       description: |-
@@ -162,9 +149,9 @@ paths:
          places a second order.
       operationId: placeOrder
       parameters:
-      - description: "A unique key that makes order placement safe to retry: a retried\
-          \ request with the same key never places a second order. Reusing a key with\
-          \ a different body is rejected. Use a UUID you generate per order."
+      - description: A unique key so a retried request never places a second order.
+          Reuse the same key to retry a call safely; reusing it with a different body
+          is a conflict.
         explode: false
         in: header
         name: Idempotency-Key
@@ -185,24 +172,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.PlaceOrderResponse"
           description: Success
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/PaymentRequired"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "409":
-          $ref: "#/components/responses/Conflict"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Place an order
   /v1/orders/{id}:
     get:
@@ -228,20 +204,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetOrderResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Get an order
-  /v1/orders/{order_id}/codes:
+  /v1/orders/{id}/codes:
     get:
       description: |-
         RevealOrderCodes returns the delivered codes of a completed order. Codes are
@@ -249,13 +220,13 @@ paths:
          it is not ready. Reveals are rate-limited per order.
       operationId: revealOrderCodes
       parameters:
-      - description: order_id is the order whose codes to reveal.
+      - description: id is the order whose codes to reveal.
         explode: false
         in: path
-        name: order_id
+        name: id
         required: true
         schema:
-          title: order_id
+          title: id
           type: string
         style: simple
       responses:
@@ -265,20 +236,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RevealOrderCodesResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/Conflict"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Reveal order codes
   /v1/ping:
     get:
@@ -293,14 +257,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.PingResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Ping
   /v1/products/{id}:
     get:
@@ -327,18 +290,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.GetProductResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Get a product
   /v1/webhooks:
     get:
@@ -353,18 +311,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.ListWebhooksResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: List webhook endpoints
     post:
       description: |-
@@ -385,20 +338,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RegisterWebhookResponse"
           description: Success
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Register a webhook endpoint
   /v1/webhooks/{id}:
     delete:
@@ -421,20 +367,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.DeleteWebhookResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Delete a webhook endpoint
   /v1/webhooks/{id}/rotate:
     post:
@@ -463,99 +402,47 @@ paths:
               schema:
                 $ref: "#/components/schemas/sodacards.devpublic.v1.RotateWebhookSecretResponse"
           description: Success
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
         default:
-          $ref: "#/components/responses/DefaultError"
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+          description: Error. The body is an RFC 9457 problem+json object; switch
+            on `code` for the machine-readable reason.
       summary: Rotate a webhook signing secret
 components:
-  responses:
-    BadRequest:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: "The request was not valid (e.g. a malformed body, a bad cursor,\
-        \ an invalid webhook URL)."
-    Unauthorized:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: "The API key is missing, malformed, revoked or expired."
-    PaymentRequired:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: The wallet balance does not cover the order.
-    Forbidden:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: "The key lacks the scope required for this action, or the account\
-        \ is not an approved reseller."
-    NotFound:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: The requested resource does not exist or is not visible to this
-        key.
-    Conflict:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: "The request conflicts with the current state (an in-flight idempotent\
-        \ retry, or an order not yet ready)."
-    UnprocessableEntity:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: "The request was well-formed but could not be processed (an Idempotency-Key\
-        \ reused with a different body, or an over-ceiling order total)."
-    TooManyRequests:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: The request rate for this key was exceeded. Retry after a short
-        delay.
-    ServiceUnavailable:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: "The feature is not configured on this service, or it is temporarily\
-        \ unavailable."
-    InternalServerError:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: An unexpected error occurred. The cause is never leaked in the
-        body.
-    DefaultError:
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ProblemDetails"
-      description: An error occurred. The body is an RFC 9457 problem document whose
-        `code` names the specific reason.
   schemas:
+    Problem:
+      description: "An RFC 9457 problem+json error. Switch on `code`, the stable machine-readable\
+        \ reason; the HTTP status frames the broad category."
+      properties:
+        type:
+          description: A stable URI identifying the error kind; it resolves to the
+            docs section for that code.
+          type: string
+        title:
+          description: "A short, human-readable summary of the error kind."
+          type: string
+        status:
+          description: "The HTTP status code, repeated in the body for convenience."
+          format: int32
+          type: integer
+        code:
+          description: "The machine-readable reason (e.g. \"insufficient_balance\"\
+            ): switch on this, never on the human text."
+          type: string
+        detail:
+          description: A human-readable explanation of this specific occurrence. May
+            be absent.
+          type: string
+        request_id:
+          description: Identifies this request in support conversations. May be absent.
+          type: string
+      required:
+      - code
+      - status
+      - title
+      - type
     sodacards.devpublic.v1.DeleteWebhookRequest:
       additionalProperties: {}
       properties:
@@ -571,11 +458,6 @@ components:
     sodacards.devpublic.v1.GetBalanceRequest:
       additionalProperties:
         nullable: true
-      description: |-
-        Money is an amount in a currency's minor units, together with the currency's
-         ISO-4217 code and its number of decimal places, so the amount can be
-         interpreted without assuming the currency. XOF (the West-African CFA franc) has
-         no minor unit, so an XOF amount is a whole franc value.
       title: GetBalanceRequest
     sodacards.devpublic.v1.GetBalanceResponse:
       additionalProperties: false
@@ -834,7 +716,7 @@ components:
       example:
         data:
         - id: id
-          status: status
+          status: pending
           total: ""
           createdAt: createdAt
           reference: reference
@@ -854,7 +736,7 @@ components:
             inputFields:
               key: inputFields
         - id: id
-          status: status
+          status: pending
           total: ""
           createdAt: createdAt
           reference: reference
@@ -925,6 +807,11 @@ components:
       title: ListWebhooksResponse
     sodacards.devpublic.v1.Money:
       additionalProperties: false
+      description: |-
+        Money is an amount in a currency's minor units, together with the currency's
+         ISO-4217 code and its number of decimal places, so the amount can be
+         interpreted without assuming the currency. XOF (the West-African CFA franc) has
+         no minor unit, so an XOF amount is a whole franc value.
       properties:
         amount:
           $ref: "#/components/schemas/amount"
@@ -947,7 +834,7 @@ components:
          supplier cost.
       example:
         id: id
-        status: status
+        status: pending
         total: ""
         createdAt: createdAt
         reference: reference
@@ -975,6 +862,12 @@ components:
           description: |-
             status is the order's current state: "pending", "processing", "completed",
              "failed" or "refunded".
+          enum:
+          - pending
+          - processing
+          - completed
+          - failed
+          - refunded
           title: status
           type: string
         total:
@@ -1162,6 +1055,12 @@ components:
           description: |-
             status is the order's current state: "pending", "processing", "completed",
              "failed" or "refunded".
+          enum:
+          - pending
+          - processing
+          - completed
+          - failed
+          - refunded
           title: status
           type: string
         total:
@@ -1329,9 +1228,9 @@ components:
     sodacards.devpublic.v1.RevealOrderCodesRequest:
       additionalProperties: {}
       properties:
-        orderId:
-          description: order_id is the order whose codes to reveal.
-          title: order_id
+        id:
+          description: id is the order whose codes to reveal.
+          title: id
           type: string
       title: RevealOrderCodesRequest
     sodacards.devpublic.v1.RevealOrderCodesResponse:
@@ -1431,37 +1330,6 @@ components:
           title: created_at
           type: string
       title: Webhook
-    ProblemDetails:
-      description: "An RFC 9457 problem document. Every error response uses this shape.\
-        \ Switch on `code` (stable, machine-readable), never on `title` or `detail`\
-        \ (human copy, may change). `status` mirrors the HTTP status."
-      properties:
-        type:
-          description: "A URI identifying the error type, e.g. https://developer.sodacards.com/errors/insufficient_balance."
-          format: uri
-          type: string
-        title:
-          description: "A short, human-readable summary of the error."
-          type: string
-        status:
-          description: "The HTTP status code, repeated for convenience."
-          type: integer
-        code:
-          description: "A stable, machine-readable error code, e.g. insufficient_balance.\
-            \ Switch on this."
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence.
-          type: string
-        request_id:
-          description: "The request identifier, to quote when contacting support."
-          type: string
-      required:
-      - code
-      - status
-      - title
-      - type
-      title: ProblemDetails
     amount:
       anyOf:
       - format: int32

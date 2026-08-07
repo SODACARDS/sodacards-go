@@ -152,9 +152,9 @@ func Test_sodacards_DefaultAPIService(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var orderId string
+		var id string
 
-		resp, httpRes, err := apiClient.DefaultAPI.RevealOrderCodes(context.Background(), orderId).Execute()
+		resp, httpRes, err := apiClient.DefaultAPI.RevealOrderCodes(context.Background(), id).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

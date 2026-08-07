@@ -19,8 +19,8 @@ var _ MappedNullable = &SodacardsDevpublicV1RevealOrderCodesRequest{}
 
 // SodacardsDevpublicV1RevealOrderCodesRequest struct for SodacardsDevpublicV1RevealOrderCodesRequest
 type SodacardsDevpublicV1RevealOrderCodesRequest struct {
-	// order_id is the order whose codes to reveal.
-	OrderId *string `json:"orderId,omitempty"`
+	// id is the order whose codes to reveal.
+	Id *string `json:"id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -43,36 +43,36 @@ func NewSodacardsDevpublicV1RevealOrderCodesRequestWithDefaults() *SodacardsDevp
 	return &this
 }
 
-// GetOrderId returns the OrderId field value if set, zero value otherwise.
-func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetOrderId() string {
-	if o == nil || IsNil(o.OrderId) {
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetId() string {
+	if o == nil || IsNil(o.Id) {
 		var ret string
 		return ret
 	}
-	return *o.OrderId
+	return *o.Id
 }
 
-// GetOrderIdOk returns a tuple with the OrderId field value if set, nil otherwise
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetOrderIdOk() (*string, bool) {
-	if o == nil || IsNil(o.OrderId) {
+func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetIdOk() (*string, bool) {
+	if o == nil || IsNil(o.Id) {
 		return nil, false
 	}
-	return o.OrderId, true
+	return o.Id, true
 }
 
-// HasOrderId returns a boolean if a field has been set.
-func (o *SodacardsDevpublicV1RevealOrderCodesRequest) HasOrderId() bool {
-	if o != nil && !IsNil(o.OrderId) {
+// HasId returns a boolean if a field has been set.
+func (o *SodacardsDevpublicV1RevealOrderCodesRequest) HasId() bool {
+	if o != nil && !IsNil(o.Id) {
 		return true
 	}
 
 	return false
 }
 
-// SetOrderId gets a reference to the given string and assigns it to the OrderId field.
-func (o *SodacardsDevpublicV1RevealOrderCodesRequest) SetOrderId(v string) {
-	o.OrderId = &v
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *SodacardsDevpublicV1RevealOrderCodesRequest) SetId(v string) {
+	o.Id = &v
 }
 
 func (o SodacardsDevpublicV1RevealOrderCodesRequest) MarshalJSON() ([]byte, error) {
@@ -85,8 +85,8 @@ func (o SodacardsDevpublicV1RevealOrderCodesRequest) MarshalJSON() ([]byte, erro
 
 func (o SodacardsDevpublicV1RevealOrderCodesRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.OrderId) {
-		toSerialize["orderId"] = o.OrderId
+	if !IsNil(o.Id) {
+		toSerialize["id"] = o.Id
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -110,7 +110,7 @@ func (o *SodacardsDevpublicV1RevealOrderCodesRequest) UnmarshalJSON(data []byte)
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "orderId")
+		delete(additionalProperties, "id")
 		o.AdditionalProperties = additionalProperties
 	}
 

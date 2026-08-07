@@ -14,7 +14,7 @@ Method | HTTP request | Description
 [**Ping**](DefaultAPI.md#Ping) | **Get** /v1/ping | Ping
 [**PlaceOrder**](DefaultAPI.md#PlaceOrder) | **Post** /v1/orders | Place an order
 [**RegisterWebhook**](DefaultAPI.md#RegisterWebhook) | **Post** /v1/webhooks | Register a webhook endpoint
-[**RevealOrderCodes**](DefaultAPI.md#RevealOrderCodes) | **Get** /v1/orders/{order_id}/codes | Reveal order codes
+[**RevealOrderCodes**](DefaultAPI.md#RevealOrderCodes) | **Get** /v1/orders/{id}/codes | Reveal order codes
 [**RotateWebhookSecret**](DefaultAPI.md#RotateWebhookSecret) | **Post** /v1/webhooks/{id}/rotate | Rotate a webhook signing secret
 
 
@@ -571,7 +571,7 @@ import (
 )
 
 func main() {
-	idempotencyKey := "idempotencyKey_example" // string | A unique key that makes order placement safe to retry: a retried request with the same key never places a second order. Reusing a key with a different body is rejected. Use a UUID you generate per order.
+	idempotencyKey := "idempotencyKey_example" // string | A unique key so a retried request never places a second order. Reuse the same key to retry a call safely; reusing it with a different body is a conflict.
 	sodacardsDevpublicV1PlaceOrderRequest := *openapiclient.NewSodacardsDevpublicV1PlaceOrderRequest() // SodacardsDevpublicV1PlaceOrderRequest | 
 
 	configuration := openapiclient.NewConfiguration()
@@ -597,7 +597,7 @@ Other parameters are passed through a pointer to a apiPlaceOrderRequest struct v
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **idempotencyKey** | **string** | A unique key that makes order placement safe to retry: a retried request with the same key never places a second order. Reusing a key with a different body is rejected. Use a UUID you generate per order. | 
+ **idempotencyKey** | **string** | A unique key so a retried request never places a second order. Reuse the same key to retry a call safely; reusing it with a different body is a conflict. | 
  **sodacardsDevpublicV1PlaceOrderRequest** | [**SodacardsDevpublicV1PlaceOrderRequest**](SodacardsDevpublicV1PlaceOrderRequest.md) |  | 
 
 ### Return type
@@ -686,7 +686,7 @@ Name | Type | Description  | Notes
 
 ## RevealOrderCodes
 
-> SodacardsDevpublicV1RevealOrderCodesResponse RevealOrderCodes(ctx, orderId).Execute()
+> SodacardsDevpublicV1RevealOrderCodesResponse RevealOrderCodes(ctx, id).Execute()
 
 Reveal order codes
 
@@ -705,11 +705,11 @@ import (
 )
 
 func main() {
-	orderId := "orderId_example" // string | order_id is the order whose codes to reveal.
+	id := "id_example" // string | id is the order whose codes to reveal.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.DefaultAPI.RevealOrderCodes(context.Background(), orderId).Execute()
+	resp, r, err := apiClient.DefaultAPI.RevealOrderCodes(context.Background(), id).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `DefaultAPI.RevealOrderCodes``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -725,7 +725,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**orderId** | **string** | order_id is the order whose codes to reveal. | 
+**id** | **string** | id is the order whose codes to reveal. | 
 
 ### Other Parameters
 

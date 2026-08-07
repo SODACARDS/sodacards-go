@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**OrderId** | Pointer to **string** | order_id is the order whose codes to reveal. | [optional] 
+**Id** | Pointer to **string** | id is the order whose codes to reveal. | [optional] 
 
 ## Methods
 
@@ -25,30 +25,30 @@ NewSodacardsDevpublicV1RevealOrderCodesRequestWithDefaults instantiates a new So
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetOrderId
+### GetId
 
-`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetOrderId() string`
+`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetId() string`
 
-GetOrderId returns the OrderId field if non-nil, zero value otherwise.
+GetId returns the Id field if non-nil, zero value otherwise.
 
-### GetOrderIdOk
+### GetIdOk
 
-`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetOrderIdOk() (*string, bool)`
+`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) GetIdOk() (*string, bool)`
 
-GetOrderIdOk returns a tuple with the OrderId field if it's non-nil, zero value otherwise
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetOrderId
+### SetId
 
-`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) SetOrderId(v string)`
+`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) SetId(v string)`
 
-SetOrderId sets OrderId field to given value.
+SetId sets Id field to given value.
 
-### HasOrderId
+### HasId
 
-`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) HasOrderId() bool`
+`func (o *SodacardsDevpublicV1RevealOrderCodesRequest) HasId() bool`
 
-HasOrderId returns a boolean if a field has been set.
+HasId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
